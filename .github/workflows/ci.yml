@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # No ANTHROPIC_API_KEY is set here, deliberately. Tier 1, Tier 2, the unit tests and
+    # the regression cassettes are all offline and deterministic; if a test ever starts
+    # reaching for the live API it must fail loudly here rather than quietly spend money.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install project
+        run: |
+          uv venv --python 3.12
+          uv pip install -e ".[dev]"
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Unit and regression tests
+        run: uv run pytest tests/unit tests/regression -q
+
+      - name: Tier 1 retrieval on the committed mini corpus
+        run: uv run dossier eval tier1 --mini
+
+      - name: Tier 2 grounding on fixtures
+        run: uv run dossier eval tier2 --mini
+
+      - name: Regression gate (Tier 1 nDCG@10 floor)
+        run: uv run python -m dossier.eval.floors
