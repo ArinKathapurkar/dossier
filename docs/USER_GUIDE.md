@@ -379,3 +379,15 @@ Everything is in `dossier/config.py`, overridable by environment variable:
 | `DOSSIER_LLM_MODE` | `live` | `live`, `record` or `replay` |
 | `DOSSIER_SEC_USER_AGENT` | — | required by SEC on API requests |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | unset | when set, spans also export via OTLP |
+
+---
+
+## Regenerate the README's size figures
+
+```bash
+pygount --format=summary --suffix=py dossier
+pygount --format=summary --suffix=py tests
+```
+
+`pygount` is in the `dev` extra. Every other number in the README comes from a JSON file
+under `runs/reports/`, written by the command named next to it.

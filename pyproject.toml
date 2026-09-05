@@ -40,6 +40,8 @@ dev = [
     "pytest-asyncio>=0.23",
     "ruff>=0.5",
     "httpx>=0.27",
+    # Line counting for the README's size figures, so they are a command rather than a claim.
+    "pygount>=1.6",
 ]
 otel = [
     "opentelemetry-sdk>=1.25",
