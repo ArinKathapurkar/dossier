@@ -35,6 +35,9 @@ from .regression import cassette
 
 DEAL_ID = "deal_cassette_3m"
 PEER_DEAL_ID = "deal_cassette_peers"
+# Cross-run memory mutates its deal, so it gets its own rather than perturbing the system
+# prompt of every other scenario recorded against the shared one.
+MEMORY_DEAL_ID = "deal_cassette_memory"
 
 
 def _deal(deal_id: str = DEAL_ID, target: str = "3M", peers: list[str] | None = None):
@@ -72,6 +75,26 @@ def sc_financials_and_compute():
 
 def sc_graph_tool():
     return ask(_deal(), "Use the entity graph: which suppliers, customers or competitors does 3M name in its filings?", skip_input_guard=True)
+
+
+def sc_hybrid_channels():
+    """All three retrieval channels enabled, so the fused path itself is pinned."""
+    from ..config import reset_config_cache
+    from ..retrieve.hybrid import reset_retriever
+
+    prev = os.environ.get("DOSSIER_RETRIEVAL_CHANNELS")
+    os.environ["DOSSIER_RETRIEVAL_CHANNELS"] = "vector,bm25,graph"
+    reset_config_cache()
+    reset_retriever()
+    try:
+        return ask(_deal(), "What does 3M's 2018 10-K disclose about its reportable segments?", skip_input_guard=True)
+    finally:
+        if prev is None:
+            os.environ.pop("DOSSIER_RETRIEVAL_CHANNELS", None)
+        else:
+            os.environ["DOSSIER_RETRIEVAL_CHANNELS"] = prev
+        reset_config_cache()
+        reset_retriever()
 
 
 def sc_abstention():
@@ -133,19 +156,38 @@ def sc_model_fallback_after_529():
 
 
 def sc_reranker_fallback():
-    """Break the reranker so retrieval degrades to the RRF order with a visible span."""
+    """Break the reranker so retrieval degrades to the RRF order with a visible span.
+
+    Reranking is off in the shipped default (it lost recall on Tier 1), so this scenario
+    turns it on explicitly -- otherwise the fallback it is meant to pin could never fire.
+    """
+    from ..config import reset_config_cache
     from ..retrieve import rerank
+    from ..retrieve.hybrid import reset_retriever
 
     original = rerank._score
 
     def broken(*_a, **_k):
         raise RuntimeError("cross-encoder failed to load")
 
+    prev_rerank = os.environ.get("DOSSIER_RETRIEVAL_RERANK")
+    prev_channels = os.environ.get("DOSSIER_RETRIEVAL_CHANNELS")
+    os.environ["DOSSIER_RETRIEVAL_RERANK"] = "1"
+    os.environ["DOSSIER_RETRIEVAL_CHANNELS"] = "vector,bm25"
+    reset_config_cache()
+    reset_retriever()
     rerank._score = broken
     try:
         return ask(_deal(), "What does 3M's 2018 10-K say about its research and development spending?", skip_input_guard=True)
     finally:
         rerank._score = original
+        for key, prev in (("DOSSIER_RETRIEVAL_RERANK", prev_rerank), ("DOSSIER_RETRIEVAL_CHANNELS", prev_channels)):
+            if prev is None:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = prev
+        reset_config_cache()
+        reset_retriever()
 
 
 def sc_neo4j_fallback():
@@ -276,19 +318,24 @@ def sc_deal_memory():
     """A second run on a deal that already carries findings, exercising cross-run memory."""
     from ..agent.deal import add_findings
 
-    deal = _deal()
+    deal = _deal(MEMORY_DEAL_ID)
     if not deal.findings:
         add_findings(
             deal.id,
             [{"text": "3M reported FY2018 capital expenditure of $1,577 million.", "evidence": ["F1"]}],
         )
-    return ask(_deal(), "Given what we already established about 3M's FY2018 capex, what was FY2018 operating cash flow?", skip_input_guard=True)
+    return ask(
+        _deal(MEMORY_DEAL_ID),
+        "Given what we already established about 3M's FY2018 capex, what was FY2018 operating cash flow?",
+        skip_input_guard=True,
+    )
 
 
 SCENARIOS: dict[str, Any] = {
     "plain_answer": sc_plain_answer,
     "financials_and_compute": sc_financials_and_compute,
     "graph_tool": sc_graph_tool,
+    "hybrid_channels": sc_hybrid_channels,
     "abstention": sc_abstention,
     "clarification": sc_clarification,
     "peer_comparison": sc_peer_comparison,

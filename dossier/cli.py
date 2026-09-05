@@ -251,10 +251,19 @@ def eval_tier1(
 
 
 @eval_app.command("tier2")
-def eval_tier2(mini: bool = typer.Option(False, help="Fixtures only; no run history required.")) -> None:
+def eval_tier2(
+    mini: bool = typer.Option(False, help="Fixtures only; no run history required."),
+    run_ooc: bool = typer.Option(False, help="First run the 15 out-of-corpus questions (costs API tokens)."),
+) -> None:
     from .eval.report import print_tier2
-    from .eval.tier2_grounding import run_tier2
+    from .eval.tier2_grounding import run_ooc_questions, run_tier2
 
+    if run_ooc:
+        ooc = run_ooc_questions()
+        console.print(
+            f"[dim]out-of-corpus probe: {ooc['abstained']}/{ooc['questions']} abstained, ${ooc['cost_usd']:.4f}[/]"
+        )
+        _emit("tier2_ooc", ooc)
     rep = run_tier2(fixtures_only=mini)
     print_tier2(rep, console)
     _emit("tier2_mini" if mini else "tier2", rep)

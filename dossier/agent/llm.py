@@ -100,16 +100,34 @@ def _block_to_dict(block: Any) -> dict:
 
 
 class Cassette:
-    """A recorded set of API exchanges for one regression case."""
+    """A recorded set of exchanges for one regression case.
+
+    Two kinds of exchange are recorded, because replaying only one of them would not make
+    a run reproducible offline:
+
+    * **API exchanges**, keyed by a hash of (model, system, messages, tools);
+    * **data-tool results**, keyed by (tool name, arguments, occurrence). CI has no LanceDB
+      index, no BM25 pickle and no XBRL database, so a replay that re-executed
+      `search_filings` against the real corpus would not run there at all -- and even
+      locally it would make the "identical twice" property depend on index state rather
+      than on the agent. Recording the tool result *and the ledger items it added* makes
+      replay a property of the cassette alone.
+
+    Pure tools (`compute`, `finish`, `draft_section`, `request_human_review`) are always
+    executed live: they touch no index, and executing them keeps the control flow real.
+    """
 
     def __init__(self, path: Path):
         self.path = path
         self.entries: dict[str, dict] = {}
         self.order: list[str] = []
+        self.tools: dict[str, dict] = {}
+        self._tool_counts: dict[str, int] = {}
         if path.exists():
             blob = json.loads(path.read_text())
             self.entries = blob.get("entries", {})
             self.order = blob.get("order", [])
+            self.tools = blob.get("tools", {})
             self.meta = blob.get("meta", {})
         else:
             self.meta = {}
@@ -122,10 +140,31 @@ class Cassette:
             self.order.append(key)
         self.entries[key] = {"request": request, "response": response}
 
+    # -- data-tool recording -------------------------------------------------------
+    def tool_key(self, name: str, args: dict) -> str:
+        """A key that distinguishes repeat calls with identical arguments."""
+        base = hashlib.sha256(json.dumps({"tool": name, "args": args}, sort_keys=True, default=str).encode()).hexdigest()[:16]
+        n = self._tool_counts.get(base, 0)
+        self._tool_counts[base] = n + 1
+        return f"{name}:{base}:{n}"
+
+    def get_tool(self, key: str) -> dict | None:
+        return self.tools.get(key)
+
+    def put_tool(self, key: str, result: str, ledger_adds: list[dict]) -> None:
+        self.tools[key] = {"result": result, "ledger_adds": ledger_adds}
+
+    def reset_tool_counts(self) -> None:
+        self._tool_counts = {}
+
     def save(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(
-            json.dumps({"meta": self.meta, "order": self.order, "entries": self.entries}, indent=2, sort_keys=True)
+            json.dumps(
+                {"meta": self.meta, "order": self.order, "entries": self.entries, "tools": self.tools},
+                indent=2,
+                sort_keys=True,
+            )
         )
 
 
@@ -153,6 +192,18 @@ _FAULT_INJECTOR = None
 def set_fault_injector(fn) -> None:
     global _FAULT_INJECTOR
     _FAULT_INJECTOR = fn
+
+
+# `output_config.effort` is not accepted by every model: Haiku 4.5 returns a 400 for it.
+# This bit the model-fallback path specifically -- the primary tier accepted effort, then a
+# fallback to the cheaper tier reused the same kwargs and failed with an unhelpful 400, so
+# the degradation path was broken exactly when it was needed. Effort is therefore attached
+# per attempt, per model, rather than once for the request.
+_NO_EFFORT_PREFIXES = ("claude-haiku",)
+
+
+def supports_effort(model: str) -> bool:
+    return not model.startswith(_NO_EFFORT_PREFIXES)
 
 
 def _is_retryable(exc: BaseException) -> bool:
@@ -241,8 +292,6 @@ def complete(
             kwargs["tools"] = tools
         if tool_choice:
             kwargs["tool_choice"] = tool_choice
-        if effort:
-            kwargs["output_config"] = {"effort": effort}
 
         attempt_models = [model]
         if cfg.fallback_model and cfg.fallback_model != model:
@@ -256,7 +305,10 @@ def complete(
                     if _FAULT_INJECTOR is not None:
                         _FAULT_INJECTOR(use_model, attempt)
                     call_started = time.time()
-                    raw = client.messages.create(**{**kwargs, "model": use_model})
+                    attempt_kwargs = {**kwargs, "model": use_model}
+                    if effort and supports_effort(use_model):
+                        attempt_kwargs["output_config"] = {"effort": effort}
+                    raw = client.messages.create(**attempt_kwargs)
                     latency = time.time() - call_started
                     payload = raw.model_dump(exclude_none=True)
                     fell_back = tier_idx > 0

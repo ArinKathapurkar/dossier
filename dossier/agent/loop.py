@@ -120,10 +120,15 @@ def _dispatch_all(tool_uses: list[dict], ctx: T.ToolContext) -> list[dict]:
     run assigns do not depend on thread scheduling -- which is what makes cassette replay
     byte-identical.
     """
+    from .llm import active_cassette
+
     results: dict[str, str] = {}
     parallel = [tu for tu in tool_uses if tu.get("name") in T.PARALLEL_SAFE]
     serial = [tu for tu in tool_uses if tu.get("name") not in T.PARALLEL_SAFE]
-    if len(parallel) > 1:
+    # The prefetch path calls the retriever directly, bypassing dispatch's record/replay.
+    # While a cassette is active every call goes through dispatch instead, so recording and
+    # replay stay complete; the concurrency is a latency optimisation, not a behaviour.
+    if len(parallel) > 1 and active_cassette() is None:
         # Retrieval itself is the expensive part and is thread-safe; run those first, then
         # apply ledger writes in call order.
         prefetch: dict[str, Any] = {}

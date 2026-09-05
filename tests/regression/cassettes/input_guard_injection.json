@@ -1,0 +1,22 @@
+{
+  "entries": {},
+  "meta": {
+    "cost_usd_when_recorded": 0.0,
+    "expect": {
+      "escalated": false,
+      "final_state": "NEEDS_CLARIFICATION",
+      "guard_pass": true,
+      "revisions": 0,
+      "span_kinds": [
+        "guard"
+      ],
+      "tool_sequence": []
+    },
+    "fallback_model": "claude-haiku-4-5",
+    "primary_model": "claude-sonnet-5",
+    "recorded_at": "2026-09-05T19:12:29Z",
+    "run_id": "run_80061acf5eae",
+    "scenario": "input_guard_injection"
+  },
+  "order": []
+}

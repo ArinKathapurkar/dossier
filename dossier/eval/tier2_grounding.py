@@ -82,6 +82,45 @@ def _fallback_spans_per_run() -> tuple[float, int, int]:
     return (fallbacks / runs if runs else 0.0), fallbacks, runs
 
 
+def run_ooc_questions(deal_id: str = "deal_ooc_probe") -> dict:
+    """Run every out-of-corpus question through `ask` so abstention can be scored.
+
+    Costs API tokens (one short run per question). Separated from `run_tier2` because Tier 2
+    itself must stay free and offline for CI; this populates the run history it reads.
+    """
+    from ..agent.deal import create_deal, get_deal
+    from ..agent.loop import ask
+
+    questions = json.loads(OOC_FILE.read_text())
+    try:
+        deal = get_deal(deal_id)
+    except KeyError:
+        deal = create_deal(target="3M", peers=["Costco", "Boeing"], deal_id=deal_id)
+    rows = []
+    for q in questions:
+        res = ask(deal, q["question"], skip_input_guard=True)
+        abstained = bool(ABSTENTION.search(res.answer_markdown or "")) or res.state == "NEEDS_CLARIFICATION"
+        rows.append(
+            {
+                "question": q["question"],
+                "why_out_of_corpus": q["why"],
+                "run_id": res.run_id,
+                "state": res.state,
+                "abstained": abstained,
+                "citations": len(res.evidence_ids),
+                "cost_usd": round(res.cost_usd, 6),
+                "answer": (res.answer_markdown or "")[:400],
+            }
+        )
+    return {
+        "questions": len(rows),
+        "abstained": sum(1 for r in rows if r["abstained"]),
+        "abstention_accuracy": round(sum(1 for r in rows if r["abstained"]) / len(rows), 4) if rows else 0.0,
+        "cost_usd": round(sum(r["cost_usd"] for r in rows), 4),
+        "rows": rows,
+    }
+
+
 def run_tier2(fixtures_only: bool = False) -> dict:
     fixtures = load_fixtures()
     checks = {"citation_validity": [], "numeric_grounding": [], "forward_looking": []}

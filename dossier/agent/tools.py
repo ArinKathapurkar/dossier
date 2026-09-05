@@ -468,15 +468,78 @@ HANDLERS = {
 }
 
 
+# Tools that read the corpus. These are recorded and replayed (see llm.Cassette) so a
+# cassette run reproduces offline; the rest are pure and always execute live.
+DATA_TOOLS = {"search_filings", "graph_query", "get_financials", "compare_peers"}
+
+
+def _ledger_snapshot(ledger) -> set[str]:
+    return set(ledger.ids())
+
+
+def _ledger_items(ledger, ids: list[str]) -> list[dict]:
+    return [ledger.get(i).as_dict() for i in ids if ledger.get(i) is not None]
+
+
+def _restore_ledger_items(ledger, items: list[dict]) -> None:
+    """Re-add recorded evidence with its original ids, so citations still resolve."""
+    from .ledger import EvidenceItem
+
+    for raw in items:
+        if raw["id"] in ledger:
+            continue
+        item = EvidenceItem(
+            id=raw["id"],
+            kind=raw["kind"],
+            citation=raw["citation"],
+            text=raw["text"],
+            source_key=raw.get("source_key", ""),
+            meta=raw.get("meta", {}),
+        )
+        ledger._items[item.id] = item
+        if item.source_key:
+            ledger._by_source[item.source_key] = item.id
+        prefix, number = item.id[0], int(item.id[1:])
+        ledger._counters[prefix] = max(ledger._counters.get(prefix, 0), number)
+
+
 def dispatch(name: str, args: dict, ctx: ToolContext) -> str:
+    from .llm import active_cassette, llm_mode
+
     handler = HANDLERS.get(name)
     if handler is None:
         return json.dumps(tool_error(name, ValueError(f"unknown tool {name!r}"), hint=f"Available tools: {sorted(HANDLERS)}"))
+
+    cassette = active_cassette()
+    mode = llm_mode()
+    recordable = cassette is not None and name in DATA_TOOLS
+    tool_key = cassette.tool_key(name, args) if recordable else None
+
     with get_tracer().span("tool_call", name, attrs={"args": {k: str(v)[:120] for k, v in args.items()}}) as span:
+        if recordable and mode == "replay":
+            recorded = cassette.get_tool(tool_key)
+            if recorded is None:
+                from .llm import LLMReplayMiss
+
+                raise LLMReplayMiss(
+                    f"cassette {cassette.path.name} has no recorded result for tool call {tool_key}"
+                )
+            _restore_ledger_items(ctx.ledger, recorded["ledger_adds"])
+            if name == "search_filings":
+                ctx.searches += 1
+            span.attrs.update({"replayed": True, "result_chars": len(recorded["result"])})
+            return recorded["result"]
         try:
+            before = _ledger_snapshot(ctx.ledger) if recordable else set()
             out = handler(args, ctx)
             span.attrs["result_chars"] = len(out)
+            if recordable and mode == "record":
+                added = [i for i in ctx.ledger.ids() if i not in before]
+                cassette.put_tool(tool_key, out, _ledger_items(ctx.ledger, added))
             return out
         except Exception as exc:  # noqa: BLE001 - converted to a model-visible result
             span.attrs["error"] = f"{type(exc).__name__}: {exc}"
-            return json.dumps(tool_error(name, exc))
+            out = json.dumps(tool_error(name, exc))
+            if recordable and mode == "record":
+                cassette.put_tool(tool_key, out, [])
+            return out

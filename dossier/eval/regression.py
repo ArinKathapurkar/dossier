@@ -39,6 +39,7 @@ def cassette(name: str, mode: str | None = None):
     prev_mode = os.environ.get("DOSSIER_LLM_MODE")
     if mode:
         os.environ["DOSSIER_LLM_MODE"] = mode
+    cas.reset_tool_counts()
     set_cassette(cas)
     try:
         yield cas

@@ -20,7 +20,17 @@ import time
 import uuid
 from dataclasses import dataclass, field
 
-from .state import connect
+from . import state as _state
+
+
+def connect():
+    """Call through the module, not a bound reference.
+
+    `from .state import connect` would bind at import time, which silently defeats a
+    test that redirects the run database -- and defeating it produced a real bug: cassette
+    replay read a deal another scenario had mutated in the developer's live database.
+    """
+    return _state.connect()
 
 
 @dataclass

@@ -23,7 +23,7 @@ import time
 import uuid
 from typing import Any
 
-from ..agent.state import connect
+from ..agent import state as _state
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS reviews (
@@ -47,7 +47,8 @@ VALID_DECISIONS = ("approved", "edited", "rejected")
 
 
 def _conn():
-    conn = connect()
+    # Call through the module so tests can redirect the database -- see agent/deal.py.
+    conn = _state.connect()
     conn.executescript(SCHEMA)
     return conn
 
