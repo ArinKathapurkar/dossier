@@ -278,8 +278,20 @@ def handle_search_filings(args: dict, ctx: ToolContext) -> str:
         from ..retrieve.hybrid import get_retriever
 
         retriever = get_retriever()
-    with get_tracer().span("retrieval", "search_filings", attrs={"query": args.get("query", "")[:120], "k": k, "filters": filters}) as span:
-        chunks = retriever.search(args["query"], deal=ctx.deal, filters=filters or None, rerank=True, top_n=k)
+    with get_tracer().span(
+        "retrieval",
+        "search_filings",
+        attrs={"query": args.get("query", "")[:120], "k": k, "filters": filters,
+               "channels": list(cfg.retrieval_channels), "rerank": cfg.retrieval_rerank},
+    ) as span:
+        chunks = retriever.search(
+            args["query"],
+            deal=ctx.deal,
+            filters=filters or None,
+            channels=cfg.retrieval_channels,
+            rerank=cfg.retrieval_rerank,
+            top_n=k,
+        )
         span.attrs["hits"] = len(chunks)
         span.attrs["channel_hits"] = {c: sum(1 for x in chunks if c in x.channels_hit) for c in ("vector", "bm25", "graph")}
         if chunks:

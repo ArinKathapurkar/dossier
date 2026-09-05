@@ -188,7 +188,19 @@ def _install_fixture_reranker(mini: dict):
     return lambda: setattr(rerank, "_score", original)
 
 
-def run_tier1(limit: int | None = None, mini: bool = False, configs: list[tuple[str, dict]] | None = None) -> dict:
+def run_tier1(
+    limit: int | None = None,
+    mini: bool = False,
+    configs: list[tuple[str, dict]] | None = None,
+    filtered: bool = False,
+) -> dict:
+    """Score the retrieval ablation.
+
+    `filtered=True` applies each question's own company as a search filter, which is what
+    the agent actually issues once it knows the company. It is reported separately because
+    the two regimes rank the configurations differently in magnitude but not in order --
+    see docs/EVAL.md.
+    """
     cfg = get_config()
     offset = cfg.gold_page_offset
     started = time.time()
@@ -226,7 +238,8 @@ def run_tier1(limit: int | None = None, mini: bool = False, configs: list[tuple[
         page_of_chunk[c["chunk_id"]] = key
 
     report: dict[str, Any] = {
-        "mode": "mini" if mini else "full",
+        "mode": ("mini" if mini else "full") + ("-filtered" if filtered else ""),
+        "filtered": filtered,
         "questions_in_benchmark": len(questions),
         "questions_scored": len(scored_questions),
         "questions_skipped_no_document": skipped,
@@ -259,6 +272,7 @@ def run_tier1(limit: int | None = None, mini: bool = False, configs: list[tuple[
                     k=cfg.retrieve_k,
                     channels=spec["channels"],
                     rerank=spec["rerank"],
+                    filters={"company": q["company"]} if filtered else None,
                     top_n=cfg.retrieve_k if not spec["rerank"] else 10,
                 )
             except KeyError:

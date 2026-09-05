@@ -239,14 +239,15 @@ def prompts() -> None:
 def eval_tier1(
     limit: int = typer.Option(0, help="Only score the first N questions."),
     mini: bool = typer.Option(False, help="Use the committed mini-corpus fixture (offline, CI)."),
+    filtered: bool = typer.Option(False, help="Apply each question's company as a filter (what the agent issues)."),
 ) -> None:
     from .eval.tier1_retrieval import run_tier1
 
-    rep = run_tier1(limit=limit or None, mini=mini)
+    rep = run_tier1(limit=limit or None, mini=mini, filtered=filtered)
     from .eval.report import print_tier1
 
     print_tier1(rep, console)
-    _emit("tier1_mini" if mini else "tier1", rep)
+    _emit(("tier1_mini" if mini else "tier1") + ("_filtered" if filtered else ""), rep)
 
 
 @eval_app.command("tier2")

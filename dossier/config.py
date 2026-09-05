@@ -133,6 +133,22 @@ class Config:
     gold_page_offset: int = 1
     retrieve_k: int = 50
     rerank_top_n: int = 8
+    # The channels and reranking the `search_filings` tool uses by default.
+    #
+    # These are set from the Tier 1 ablation, not from the architecture diagram. On
+    # FinanceBench, dense retrieval alone beats every fused and reranked configuration --
+    # both corpus-wide and with a company filter applied (docs/EVAL.md). BM25 over the raw
+    # question text is dominated by financial vocabulary common to every 10-K page, and the
+    # cross-encoder reorders table-heavy pages poorly. Rather than defend the pipeline, the
+    # default follows the measurement; the other channels stay available per call and are
+    # still load-bearing elsewhere (BM25 is the LanceDB fallback and backs `chunk_meta`; the
+    # graph backs the `graph_query` tool the memo path uses).
+    retrieval_channels: tuple[str, ...] = field(
+        default_factory=lambda: tuple(_env("DOSSIER_RETRIEVAL_CHANNELS", "vector").split(","))
+    )
+    retrieval_rerank: bool = field(
+        default_factory=lambda: _env("DOSSIER_RETRIEVAL_RERANK", "0") not in ("0", "false", "False", "")
+    )
     graph_hops: int = 1
     fuzzy_threshold: int = 90
 

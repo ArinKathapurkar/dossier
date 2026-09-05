@@ -155,9 +155,13 @@ def _prefetch(tool_use: dict, ctx: T.ToolContext) -> Any:
             from ..retrieve.hybrid import get_retriever
 
             retriever = get_retriever()
+        cfg = get_config()
         filters = {k: args[k] for k in ("company", "doc_type", "fiscal_period") if args.get(k)}
-        k = min(int(args.get("k") or get_config().rerank_top_n), 15)
-        return retriever.search(args.get("query", ""), deal=ctx.deal, filters=filters or None, rerank=True, top_n=k)
+        k = min(int(args.get("k") or cfg.rerank_top_n), 15)
+        return retriever.search(
+            args.get("query", ""), deal=ctx.deal, filters=filters or None,
+            channels=cfg.retrieval_channels, rerank=cfg.retrieval_rerank, top_n=k,
+        )
     except Exception:
         return None
 
