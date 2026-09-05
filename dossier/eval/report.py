@@ -34,6 +34,10 @@ def print_tier1(rep: dict, console) -> None:
     )
 
 
+def _rate(value) -> str:
+    return "n/a (not scored)" if value is None else f"{value:.3f}"
+
+
 def print_tier2(rep: dict, console) -> None:
     m = rep["metrics"]
     _table(
@@ -41,11 +45,11 @@ def print_tier2(rep: dict, console) -> None:
         f"Tier 2 grounding and guardrails (n={rep['answers_checked']} answers, {rep['fixtures']} fixtures)",
         ["metric", "value"],
         [
-            ["citation validity", f"{m['citation_validity']:.3f}"],
-            ["numeric grounding", f"{m['numeric_grounding']:.3f}"],
-            ["forward-looking attribution", f"{m['forward_looking_attribution']:.3f}"],
-            ["abstention accuracy (out-of-corpus)", f"{m['abstention_accuracy']:.3f}"],
-            ["fixture verdict accuracy", f"{m['fixture_accuracy']:.3f}"],
+            ["citation validity", _rate(m["citation_validity"])],
+            ["numeric grounding", _rate(m["numeric_grounding"])],
+            ["forward-looking attribution", _rate(m["forward_looking_attribution"])],
+            [f"abstention accuracy ({rep['ooc_scored']}/{rep['ooc_questions']} out-of-corpus)", _rate(m["abstention_accuracy"])],
+            ["fixture verdict accuracy", _rate(m["fixture_accuracy"])],
             ["fallback spans per run", f"{m['fallback_spans_per_run']:.2f}"],
         ],
     )

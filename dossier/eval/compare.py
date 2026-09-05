@@ -94,7 +94,7 @@ def _metrics_for(tier: int, report: dict) -> dict[str, float]:
                 out[f"{name} {metric}"] = m[metric]
         return out
     if tier == 2:
-        return dict(report["metrics"])
+        return {k: v for k, v in report["metrics"].items() if v is not None}
     return {
         "correct": report["overall"]["correct"],
         "partially_correct": report["overall"]["partially_correct"],

@@ -199,7 +199,9 @@ def run_tier2(fixtures_only: bool = False) -> dict:
             "citation_validity": rate("citation_validity"),
             "numeric_grounding": rate("numeric_grounding"),
             "forward_looking_attribution": rate("forward_looking"),
-            "abstention_accuracy": round(ooc_correct / ooc_scored, 4) if ooc_scored else 0.0,
+            # None, not 0.0: no out-of-corpus run has been scored, which is not the same as
+            # scoring zero. `--mini` is fixtures-only and never has run history.
+            "abstention_accuracy": round(ooc_correct / ooc_scored, 4) if ooc_scored else None,
             "fixture_accuracy": round(fixture_correct / len(fixtures), 4) if fixtures else 0.0,
             "fallback_spans_per_run": round(fb_per_run, 4),
         },
