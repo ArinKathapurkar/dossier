@@ -1,0 +1,23 @@
+{
+  "_comment": [
+    "Tier 1 regression gate, enforced in CI by `python -m dossier.eval.floors` against the",
+    "committed mini corpus. Floors sit a little below the values measured when they were",
+    "committed, so an ordinary chunking or fusion tweak does not trip them but a real",
+    "regression does. Raise a floor deliberately, in the same commit as the change that",
+    "earns it -- never to make a red build go away.",
+    "Measured at commit time on tests/fixtures/mini_corpus (20 questions, 4 documents):",
+    "vector nDCG@10 0.1362 / R@10 0.45; rrf(all three)+rerank nDCG@10 0.0923 / R@10 0.35;",
+    "evidence match rate 0.636."
+  ],
+  "configs": {
+    "rrf(all three)+rerank": {
+      "ndcg@10": 0.08,
+      "recall@10": 0.30
+    },
+    "vector": {
+      "ndcg@10": 0.12,
+      "recall@10": 0.40
+    }
+  },
+  "evidence_match_rate": 0.60
+}

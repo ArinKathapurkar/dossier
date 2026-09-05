@@ -104,6 +104,7 @@ def _mini_corpus() -> dict:
         "chunks": json.loads((d / "chunks.json").read_text()),
         "questions": json.loads((d / "questions.json").read_text()),
         "embeddings": d / "embeddings.npy",
+        "rerank_scores": json.loads((d / "rerank_scores.json").read_text()) if (d / "rerank_scores.json").exists() else {},
     }
 
 
@@ -166,6 +167,27 @@ def _build_mini_retriever(mini: dict):
     return HybridRetriever(vector_store=_FixtureVectorStore(), bm25_store=bm, graph_store=_EmptyGraph(), embedder=_FixtureEmbedder())
 
 
+def _install_fixture_reranker(mini: dict):
+    """Replace the cross-encoder with the committed scores, so CI runs the rerank row too.
+
+    Returns a restore callable. Only the fixture's own questions have scores; anything else
+    raises, which keeps this from silently masking a real reranker failure elsewhere.
+    """
+    from ..retrieve import rerank
+
+    scores = mini.get("rerank_scores") or {}
+    original = rerank._score
+
+    def fixture_score(query: str, chunks):
+        table = scores.get(query.strip())
+        if table is None:
+            raise KeyError(f"mini corpus has no pre-computed reranker scores for {query[:60]!r}")
+        return [table.get(c.chunk_id, -12.0) for c in chunks]
+
+    rerank._score = fixture_score
+    return lambda: setattr(rerank, "_score", original)
+
+
 def run_tier1(limit: int | None = None, mini: bool = False, configs: list[tuple[str, dict]] | None = None) -> dict:
     cfg = get_config()
     offset = cfg.gold_page_offset
@@ -176,7 +198,8 @@ def run_tier1(limit: int | None = None, mini: bool = False, configs: list[tuple[
         questions = data["questions"]
         chunk_rows = data["chunks"]
         retriever = _build_mini_retriever(data)
-        rerank_available = False
+        restore_rerank = _install_fixture_reranker(data)
+        rerank_available = bool(data.get("rerank_scores"))
     else:
         import pandas as pd
 
@@ -186,6 +209,7 @@ def run_tier1(limit: int | None = None, mini: bool = False, configs: list[tuple[
         questions = load_questions()
         chunk_rows = pd.read_parquet(cfg.paths.chunks_parquet).to_dict("records")
         retriever = HybridRetriever()
+        restore_rerank = None
         rerank_available = True
 
     ingested_docs = {c["doc_name"] for c in chunk_rows}
@@ -264,6 +288,8 @@ def run_tier1(limit: int | None = None, mini: bool = False, configs: list[tuple[
     if rerank_latencies:
         report["rerank_latency_p50_ms"] = round(_pct(rerank_latencies, 50) * 1000, 1)
         report["rerank_latency_p95_ms"] = round(_pct(rerank_latencies, 95) * 1000, 1)
+    if restore_rerank is not None:
+        restore_rerank()
     report["elapsed_s"] = round(time.time() - started, 1)
     return report
 
