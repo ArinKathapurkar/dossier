@@ -214,11 +214,56 @@ ground the claim.
 
 ### Tier 3 — answer correctness
 
-<!--TIER3-->
+`dossier eval tier3 --limit 50` → `runs/reports/tier3.json`
+
+| question type | n | correct | partial | incorrect | abstained |
+|---|---|---|---|---|---|
+| domain-relevant | 22 | 0.773 | 0.136 | 0.000 | 0.091 |
+| metrics-generated | 17 | 0.824 | 0.000 | 0.118 | 0.059 |
+| novel-generated | 11 | 0.727 | 0.000 | 0.182 | 0.091 |
+| **ALL** | **50** | **0.780** | **0.060** | **0.080** | **0.080** |
+
+| | |
+|---|---|
+| mean cost per question | **$0.1292** |
+| mean latency per question | **28.3 s** |
+| revise-loop rate | **0.580** |
+| HITL escalation rate | **0.080** |
+| fallback spans per 100 runs | 0.0 |
+| total cost for the 50-question run | $6.68 |
+
+Judge: `prompts/judge.md` on the sonnet tier, cached by (answer hash, prompt version).
+
+**78% correct, 84% correct-or-partial**, against a retrieval ceiling of 0.577 evidence match
+rate — the agent recovers a lot of what single-shot retrieval misses by searching again,
+falling back to exact XBRL facts, and computing rather than recalling.
+
+**The revise-loop rate is the number to look at: 58% of first drafts were rejected by
+the output guard** and rewritten. That is the guard doing real work on real answers, not a
+formality — and it is why abstention (8.0%) and incorrect (8.0%) are both low
+while retrieval recall is only 0.44. It also explains the mean cost: a run that revises pays
+for two or three extra turns.
 
 ### Memo run
 
-<!--MEMO-->
+The five-section memo path is implemented (`agent/subagents.py`), unit-tested for the
+ledger-merge and id-remapping logic that makes it correct, and exercised by the
+`hitl_enqueue` / `hitl_resume_*` cassettes, which run the `memo_section` path with a real
+section prompt through escalation and resume.
+
+**A full five-section memo has not been run end to end.** The Anthropic credit balance for
+this account was exhausted during the build — after the entity graph ($5.03), the 50-question
+Tier 3 run ($6.68), the 15 out-of-corpus probes ($0.18) and 22 cassette recordings ($0.97).
+The parallel-versus-`--sequential` wall-time comparison and total memo cost are therefore
+**not measured, and are not stated**. `dossier memo <deal_id>` and `dossier demo` will produce
+them on an account with credit; both write their numbers to `runs/reports/`.
+
+Measured from the recorded runs that did complete:
+
+| | |
+|---|---|
+| budget-manager compaction on a forced 600-token ceiling | 1 compaction, **10,919 tokens saved** |
+| cost cap firing | run ends with a partial answer and `budget_capped: true` |
 
 ### Repository
 
@@ -232,14 +277,68 @@ ground the claim.
 | | |
 |---|---|
 | unit tests | **88**, all offline |
-| regression cassettes | <!--NCASSETTES--> |
+| regression cassettes | **22**, replayed offline in CI ($0.97 to record) |
 | Tier 1 CI floor | nDCG@10 ≥ 0.08 on `rrf(all three)+rerank`, ≥ 0.12 on `vector` |
 
 ---
 
 ## The demo run
 
-<!--DEMO-->
+`dossier demo` creates the demo deal (`data/demo_deal.json`: Costco against Coca-Cola,
+General Mills and Kraft Heinz) and runs three questions plus a memo. The memo half could not
+complete — see above — so what follows is a **real recorded run** from the regression
+cassettes, not a reconstruction. Reproduce it with `dossier trace run_e112a35e5111`.
+
+**Question.** *What was 3M free cash flow in FY2018? Compute it from operating cash flow
+minus capital expenditure.*
+
+```
+run run_e112a35e5111
+└── run:ask  7097ms
+    ├── turn:turn_1  1974ms
+    │   └── llm_call:system_analyst  1973ms  claude-sonnet-5  in 3280 out 148  $0.0080
+    │       system_analyst@dae74f73
+    ├── tool_call:get_financials  41ms
+    ├── turn:turn_2  1206ms
+    │   └── llm_call:system_analyst  1205ms  claude-sonnet-5  in 3884 out 93  $0.0087
+    │       system_analyst@dae74f73
+    ├── tool_call:compute  0ms
+    ├── turn:turn_3  3865ms
+    │   └── llm_call:system_analyst  3864ms  claude-sonnet-5  in 4111 out 434  $0.0126
+    │       system_analyst@dae74f73
+    ├── tool_call:finish  0ms
+    └── guard:output_guard  1ms
+total cost $0.0293
+```
+
+**Answer.**
+
+> 3M's FY2018 free cash flow was **$4,862 million**.
+>
+> - Operating cash flow (FY2018): $6,439 million **[F1]**
+> - Capital expenditures / PaymentsToAcquirePropertyPlantAndEquipment (FY2018): $1,577 million **[F2]**
+> - Free cash flow = OCF − Capex = $6,439M − $1,577M = **$4,862M** **[C1]**
+>
+> Source: 3M XBRL companyfacts, as reported in the 10-K filed 2021-02-04, fiscal year 2018
+> (2018-01-01 to 2018-12-31).
+
+**Evidence ledger.**
+
+```
+[F1] 3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2018 (10-K filed 2021-02-04)
+[F2] 3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2018 (10-K filed 2021-02-04)
+[C1] computed: ocf - capex from [F1, F2]
+```
+
+Three things this shows. The derived figure is not asserted — it is a `compute` call whose
+result carries the ids it was derived from, so a reviewer can check the arithmetic. The
+figures come from XBRL rather than from prose, so they are exact and carry a filing date.
+And the guard verified all three numbers against those sources before the answer was
+returned; `$4,862` matches `[C1]`, and `[C1]` matches `[F1] − [F2]`.
+
+*(The FY2018 capex figure here is $1,577M — the gold FinanceBench answer. Getting it right
+required fixing how SEC `companyfacts` fiscal years are read; see
+[`docs/DESIGN.md` §5.2](docs/DESIGN.md).)*
 
 ---
 
@@ -269,11 +368,18 @@ dossier serve &  curl -s localhost:8000/health
 
 ## Notes on this build
 
-- **Neo4j was not exercised.** Docker was not running on the build machine and did not
-  start, so every number in this repository was produced with the **NetworkX** graph
-  backend. `Neo4jGraphStore` implements the same interface and is covered by an integration
-  test that skips when the container is unreachable; the fallback from Neo4j to NetworkX is
-  covered by a unit test and a recorded cassette.
+- **Neo4j was exercised, but every number here came from NetworkX.** The Docker daemon was
+  stopped at the start of the build and came up partway through, so the retrieval and eval
+  numbers above were all produced against the **NetworkX** backend. Neo4j was then loaded
+  with the same graph (`dossier graph sync --to neo4j`, 4,604 entities and 5,781 relations in
+  2.1 s) and five parity tests assert that both backends answer `find_entities`, `expand`,
+  `neighbors` and `chunks_for` identically. `docker compose up --build` was run end to end:
+  the container serves `/health` with the full index, and reports the graph from Neo4j when
+  `DOSSIER_GRAPH_BACKEND=neo4j`. The Neo4j-to-NetworkX fallback is covered by a unit test and
+  a recorded cassette.
+- **The API credit balance ran out** before `dossier demo` and a full five-section memo run
+  could complete. Those numbers are stated as unmeasured rather than estimated — see the
+  Memo run section above and [`docs/EVAL.md` §6](docs/EVAL.md).
 - **Model tiers.** Primary `claude-sonnet-5`, fallback and extraction tier
   `claude-haiku-4-5`, judge `claude-sonnet-5`. All ids are config values, verified to resolve
   against `/v1/models` at preflight.

@@ -443,10 +443,18 @@ page of 84 filings would have cost roughly $40 for pages whose content the XBRL 
 already holds exactly. The cap is a parameter (`max_pages_per_doc`), and the cache means
 raising it only pays for the new pages.
 
-**Graph backend in this build.** Docker was not running on the build machine and did not
-start, so **Neo4j was never exercised**. The `Neo4jGraphStore` implements the same interface
-and is covered by an integration test that skips when the container is unreachable; the
-NetworkX backend is what produced every number in this repository. The README says so.
+**Graph backend in this build.** The Docker daemon was stopped when the build started, so
+the NetworkX backend produced every retrieval and eval number in this repository. Docker came
+up partway through; Neo4j was then loaded with the same graph via `dossier graph sync --to
+neo4j` (4,604 entities, 5,781 relations, 2.1 s) and five parity tests now assert that both
+backends answer the interface identically. `docker compose up --build` was verified end to
+end. The measured numbers were not re-run against Neo4j because the backends are asserted
+equivalent and re-running would not produce different retrieval results -- the graph channel
+scores zero on this benchmark either way (§4.4).
+
+**A sync command rather than a second extraction.** Exercising Neo4j could have meant
+re-running entity extraction against it for another $5. `dossier graph sync --to neo4j`
+copies the built graph instead: extraction is the expensive step, the store is not.
 
 **Mini-corpus reranker scores.** Rather than skipping the reranked row in CI, the fixture
 ships pre-computed cross-encoder scores for each question's fused candidate set (1,000

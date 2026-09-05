@@ -222,13 +222,19 @@ specific violation kind it is supposed to. Asserted in CI by
 Measured over the fixtures plus the answers stored from Tier 3 and the cassette recordings.
 Regenerate with `dossier eval tier2`; current values are in `runs/reports/tier2.json`.
 
-| metric | value |
-|---|---|
-| citation validity rate | see `runs/reports/tier2.json` |
-| numeric grounding rate | " |
-| forward-looking attribution rate | " |
-| abstention accuracy on 15 out-of-corpus questions | " |
-| fallback spans per run | " |
+| metric | value | over |
+|---|---|---|
+| citation validity rate | **0.9839** | 62 answers |
+| numeric grounding rate | **0.8871** | 62 answers |
+| forward-looking attribution rate | **0.9839** | 62 answers |
+| abstention accuracy | **1.0000** | 15 / 15 out-of-corpus questions |
+| fixture verdict accuracy | **1.0000** | 12 / 12 fixtures |
+| fallback spans per run | 0.0571 | 70 runs, 4 fallbacks |
+
+62 answers checked: the 12 fixtures plus 50 answers stored from real runs.
+Numeric grounding at 0.887 is the interesting one -- roughly one answer in nine
+carries a figure the guard cannot trace, and those are the answers that enter the revise loop
+rather than shipping.
 
 The out-of-corpus set (`tests/fixtures/ooc_questions.json`) is fifteen questions naming
 companies that are not in the corpus (Tesla, NVIDIA, Alphabet, Apple, Goldman Sachs, Exxon
@@ -250,15 +256,36 @@ Method: run the full `ask` path over N FinanceBench questions with a fresh deal 
 justification with `prompts/judge.md` on the sonnet tier. Judge outputs are cached by
 (answer hash, judge prompt version).
 
-Results are in `runs/reports/tier3.json` and reproduced in the README. Abstention is kept as
-its own category rather than folded into "incorrect": for a system whose selling point is
-that it declines rather than guesses, collapsing the two would penalise the behaviour it was
-built to produce. The report splits abstentions by whether the source document was actually
-ingested, which is what separates correct caution from a retrieval miss.
+### Results (n = 50)
 
-Given the Tier 1 numbers, expect abstention to be a large share of the distribution: when
-retrieval returns nothing on a gold page, abstaining is the correct behaviour, and a 0.577
-evidence-match ceiling bounds how often it can do better.
+| question type | n | correct | partial | incorrect | abstained |
+|---|---|---|---|---|---|
+| domain-relevant | 22 | 0.773 | 0.136 | 0.000 | 0.091 |
+| metrics-generated | 17 | 0.824 | 0.000 | 0.118 | 0.059 |
+| novel-generated | 11 | 0.727 | 0.000 | 0.182 | 0.091 |
+| **ALL** | **50** | **0.780** | **0.060** | **0.080** | **0.080** |
+
+| | |
+|---|---|
+| mean cost per question | **$0.1292** |
+| mean latency per question | **28.3 s** |
+| revise-loop rate | **0.580** |
+| HITL escalation rate | **0.080** |
+| fallback spans per 100 runs | 0.0 |
+| total cost | $6.68 |
+
+Abstention is kept as its own category rather than folded into "incorrect": for a system
+whose selling point is that it declines rather than guesses, collapsing the two would
+penalise the behaviour it was built to produce.
+
+**The result worth reading is the revise-loop rate.** 58% of first drafts failed the
+output guard and were rewritten before the answer was returned. That is not a formality
+firing on edge cases -- it is the majority path, and it is why incorrect answers sit at
+8.0% and abstentions at 8.0% even though single-shot retrieval recall is 0.44
+against a 0.577 ceiling. The agent recovers what retrieval misses by searching again, by
+falling back to exact XBRL facts, and by computing rather than recalling; the guard is what
+forces it to keep doing that instead of shipping the first plausible draft. It also explains
+the mean cost: a run that revises twice pays for two or three extra turns.
 
 ---
 
@@ -333,12 +360,39 @@ come back with Δ = 0. Any non-zero delta on Tier 1 is measurement noise, and it
 much of a Tier 3 delta is signal rather than variance. Run it before trusting a Tier 3
 comparison.
 
-A worked comparison of `prompts/system_analyst.md` across the commit that tightened its
-citation rule is recorded in `runs/reports/compare_tier2.json`.
+`runs/reports/compare_tier1.json` holds the control run across the two most recent commits:
+every metric returns Δ = 0.0000, confirming the harness introduces no variance of its own
+and that a non-zero Tier 3 delta would be attributable to the prompt change.
+
+A Tier 3 prompt comparison was **not run**: the Anthropic credit balance for this account was
+exhausted during the build (see §7), and a meaningful Tier 3 comparison needs two 30-question
+runs. The harness is complete and the command is one line; the number is simply not claimed.
 
 ---
 
-## 6. Reproducing everything
+## 6. What was not measured, and why
+
+Two items in the plan were not measured, because the Anthropic credit balance for this
+account was exhausted after the entity graph ($5.03), the 50-question Tier 3 run ($6.68), the
+15 out-of-corpus probes ($0.18) and 22 cassette recordings ($0.97) -- roughly $13 of API
+spend.
+
+- **A full five-section memo run**, and therefore the parallel-versus-`--sequential` wall
+  time, total memo cost and token counts. The path is implemented, its ledger-merge and
+  id-remapping logic is unit-tested, and the `memo_section` run type with a real section
+  prompt is exercised end to end by the `hitl_enqueue` / `hitl_resume_*` cassettes -- but the
+  five-section assembly has not run. `dossier memo <deal_id>` writes those numbers to
+  `runs/reports/`.
+- **A Tier 3 prompt comparison.** See §5.
+
+Both are stated rather than estimated. Numbers this repository does not have are not in it.
+
+The compaction figure that *was* measured comes from the `budget_compaction` cassette: on a
+forced 600-token ceiling, one compaction saved **10,919 tokens**.
+
+---
+
+## 7. Reproducing everything
 
 ```bash
 uv venv --python 3.12 && source .venv/bin/activate && uv pip install -e ".[dev]"

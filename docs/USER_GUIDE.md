@@ -263,9 +263,15 @@ reports is noise — which tells you how much of a Tier 3 difference is signal.
 ```bash
 open -a Docker                       # macOS; wait for `docker info` to succeed
 docker compose up -d neo4j
-dossier index --skip-vectors --graph neo4j
+dossier graph sync --to neo4j        # copy the built graph -- no re-extraction, no cost
+dossier graph stats --backend neo4j
 DOSSIER_GRAPH_BACKEND=neo4j dossier ask <deal_id> "Which suppliers does the target name?"
 ```
+
+`dossier graph sync` exists so the Neo4j path can be exercised without paying for entity
+extraction twice. `pytest tests/unit/test_neo4j_integration.py` then asserts that both
+backends answer `find_entities`, `expand`, `neighbors` and `chunks_for` identically; it skips
+itself when no container is reachable, so it never breaks CI.
 
 Stopping the container mid-run is a supported failure: the store falls back to NetworkX and
 emits a `fallback` span, which `dossier trace` will show. That is the intended behaviour, and
