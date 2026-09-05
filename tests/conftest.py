@@ -11,7 +11,6 @@ Two invariants every test in this suite relies on:
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 

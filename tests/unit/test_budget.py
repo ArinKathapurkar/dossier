@@ -1,6 +1,11 @@
 """Budget manager: compacts the oldest tool results, keeps ids, records what it saved."""
 
-from dossier.agent.budget import BudgetManager, approx_tokens, conversation_tokens, strip_internal_keys
+from dossier.agent.budget import (
+    BudgetManager,
+    approx_tokens,
+    conversation_tokens,
+    strip_internal_keys,
+)
 
 
 def exact_tokens(text: str) -> int:
