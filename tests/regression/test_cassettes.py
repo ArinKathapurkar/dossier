@@ -56,8 +56,9 @@ def test_replay_matches_the_recorded_expectations(path, runs_db):
     assert observed["guard_pass"] == expect["guard_pass"], "guard verdict drifted"
     assert observed["escalated"] == expect["escalated"], "HITL escalation drifted"
     assert observed["revisions"] == expect["revisions"], "revise-loop count drifted"
-    # Span kinds are asserted as a superset check on the recorded kinds: replay skips the
-    # live retry path, so a recorded run may legitimately have kinds a replay cannot emit.
+    # Span kinds are asserted as a superset check on the recorded kinds. `fallback` is
+    # excluded because replay skips the live retry and model-tier path: a recorded run can
+    # legitimately carry a fallback span that a replayed one has no way to produce.
     missing = set(expect["span_kinds"]) - set(observed["span_kinds"]) - {"fallback"}
     assert not missing, f"replay lost span kinds {sorted(missing)}"
 

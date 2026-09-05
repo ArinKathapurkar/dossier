@@ -1,0 +1,12 @@
+{
+  "case_id": "rev_0e89d21636",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "rejected",
+  "reviewer_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop.",
+  "reason_escalated": "The question asks whether 3M's litigation reserves are adequate. 3M's filings disclose reserve amounts and repeatedly state that for many matters (including combat arms earplugs litigation itself, beyond the $1.0-1.2B funding commitment) no liability is recorded because loss is not probable/estimable, and that the company cannot estimate a possible loss or range of loss in excess of accruals. Nowhere do the filings assert that recorded reserves are sufficient to cover ultimate liability. Any adequacy judgement would be my own inference, not a grounded filing statement, so I'm escalating before asserting it.",
+  "expect": {
+    "must_address_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop."
+  }
+}

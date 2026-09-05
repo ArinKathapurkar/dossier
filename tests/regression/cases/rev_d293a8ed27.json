@@ -1,0 +1,19 @@
+{
+  "case_id": "rev_d293a8ed27",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "edited",
+  "reviewer_notes": "Replaced the adequacy judgement with what the filing actually discloses.",
+  "reason_escalated": "Output guard failed after 2 revision(s): numeric_ungrounded; numeric_ungrounded",
+  "expect": {
+    "guard_must_pass": true,
+    "previously_violated": [
+      "numeric_ungrounded"
+    ],
+    "must_not_contain": [
+      "$0.2",
+      "$1.2"
+    ]
+  }
+}

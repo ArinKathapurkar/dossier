@@ -1,6 +1,6 @@
 {
   "entries": {
-    "65bfb12d0018d62e75c166c5": {
+    "920ba03b37df0be71ef0b54f": {
       "request": {
         "messages": [
           {
@@ -13,10 +13,9 @@
                 "caller": {
                   "type": "direct"
                 },
-                "id": "toolu_01WbE3B2K6W6n7xaPufFtppz",
+                "id": "toolu_01ECyjZ2BTARXg1JT5bkTdco",
                 "input": {
                   "entity": "3M",
-                  "hops": 1,
                   "relation": "COMPETES_WITH"
                 },
                 "name": "graph_query",
@@ -29,7 +28,7 @@
             "content": [
               {
                 "content": "Graph neighbourhood of 3m:\n(no edges)\n\nProvenance passages:\n[E1] 3M 10k 2018, p.10\n<document>\ntable of contents forward - looking statements are based on certain assumptions and expectations of future events and trends that are subject to risks and uncertainties. actual future results and trends may differ materially from historical results or those reflected in any such forward - looking statements depending on a variety of factors. important information as to these factors can be found in this document, including, among others, \u201c management \u2019 s discussion and analysis of financial condition and results of operations \u201d under the headings of \u201c overview, \u201d \u201c financial condition and liquidity \u201d and annually in \u201c critical accounting estimates. \u201d discussion of these factors is incorporated by reference from part i, item 1a, \u201c risk factors, \u201d of this document, and should be considered an integral part of part ii, item 7, \u201c management \u2019 s discussion and analysis of financial condition and results of operations. \u201d for additional information concerning factors that may cause actual results to vary materially from those stated in the forward - looking statements, see our reports on form 10 - k, 10 - q and 8 - k filed with the sec from time to time. item 1a. risk factors provided below is a cautionary discussion of what we believe to be the most important risk factors applicable to the company. discussion of these factors is incorporated by reference into and considered an integral part of part i, item 2, \u201c management \u2019 s discussion and analysis of financial conditions and results of operations. \u201d * results are impacted by the effects of, and changes in, worldwide economic, political, and capital markets conditions. the company operates in more than 70 countries and derives approximately 60 percent of its revenues from outside the united states. the company \u2019 s business is subject to global competition and geopolitical risks and may be adversely affected by\n</document>\n\n[E2] 3M 10k 2018, p.10\n<document>\n, and capital markets conditions. the company operates in more than 70 countries and derives approximately 60 percent of its revenues from outside the united states. the company \u2019 s business is subject to global competition and geopolitical risks and may be adversely affected by factors in the united states and other countries that are beyond its control, such as slower economic growth, disruptions in financial markets, economic downturns in the form of either contained or widespread recessionary conditions, inflation, elevated unemployment levels, sluggish or uneven recovery, government actions impacting international trade agreements, imposing trade restrictions such as tariffs, and retaliatory counter measures, government deficit reduction and other austerity measures in specific countries or regions, or in the various industries in which the company operates ; social, political or labor conditions in specific countries or regions ; natural and other disasters or climate change affecting the operations of the company or its customers and suppliers ; or adverse changes in the availability and cost of capital, interest rates, tax rates, tax laws, or exchange control, ability to expatriate earnings and other regulations in the jurisdictions in which the company operates. * change in the company \u2019 s credit ratings could increase cost of funding. the company \u2019 s credit ratings are important to 3m \u2019 s cost of capital. the major rating agencies routinely evaluate the company \u2019 s credit profile and assign debt ratings to 3m. this evaluation is based on a number of factors, which include financial strength, business and financial risk, as well as transparency with rating agencies and timeliness of financial reporting. 3m currently has an aa - credit rating with a stable outlook from standard & poor \u2019 s and has an a1 credit rating with a stable outlook from moody \u2019 s investors service.\n</document>\n\n[E3] 3M 10k 2018, p.10\n<document>\nas well as transparency with rating agencies and timeliness of financial reporting. 3m currently has an aa - credit rating with a stable outlook from standard & poor \u2019 s and has an a1 credit rating with a stable outlook from moody \u2019 s investors service. the company \u2019 s credit ratings have served to lower 3m \u2019 s borrowing costs and facilitate access to a variety of lenders. the addition of further leverage to the company \u2019 s capital structure could impact 3m \u2019 s credit ratings in the future. failure to maintain strong investment grade ratings would adversely affect the company \u2019 s cost of funding and could adversely affect liquidity and access to capital markets. * the company \u2019 s results are affected by competitive conditions and customer preferences. demand for the company \u2019 s products, which impacts revenue and profit margins, is affected by ( i ) the development and timing of the introduction of competitive products ; ( ii ) the company \u2019 s response to downward pricing to stay competitive ; ( iii ) changes in customer order patterns, such as changes in the levels of inventory maintained by customers and the timing of customer purchases which may be affected by announced price changes, changes in the company \u2019 s incentive programs, or the customer \u2019 s ability to achieve incentive goals ; ( iv ) changes in customers \u2019 preferences for our products, including the success of products offered by our competitors, and changes in customer designs for their products that can affect the demand for some of the company \u2019 s products ; and ( v ) changes in the business environment related to disruptive technologies, such as artificial intelligence, block - chain, expanded analytics and other enhanced learnings from increasing volume of available data. * foreign currency exchange rates and fluctuations in those rates may affect the company \u2019 s ability to realize projected\n</document>\n\n[E4] 3M 10k 2018, p.10\n<document>\nenvironment related to disruptive technologies, such as artificial intelligence, block - chain, expanded analytics and other enhanced learnings from increasing volume of available data. * foreign currency exchange rates and fluctuations in those rates may affect the company \u2019 s ability to realize projected growth rates in its sales and earnings. because the company \u2019 s financial statements are denominated in u. s. dollars and approximately 60 percent of the company \u2019 s revenues are derived from outside the united states, the company \u2019 s results of operations and its ability to realize projected growth rates in sales and earnings could be adversely affected if the u. s. dollar strengthens significantly against foreign currencies. 10\n</document>\n\n[E5] 3M 10k 2018, p.11\n<document>\ntable of contents * the company \u2019 s growth objectives are largely dependent on the timing and market acceptance of its new product offerings, including its ability to continually renew its pipeline of new products and to bring those products to market. this ability may be adversely affected by difficulties or delays in product development, such as the inability to identify viable new products, obtain adequate intellectual property protection, or gain market acceptance of new products. there are no guarantees that new products will prove to be commercially successful. * the company \u2019 s future results are subject to fluctuations in the costs and availability of purchased components, compounds, raw materials and energy, including oil and natural gas and their derivatives, due to shortages, increased demand, supply interruptions, currency exchange risks, natural disasters and other factors. the company depends on various components, compounds, raw materials, and energy ( including oil and natural gas and their derivatives ) supplied by others for the manufacturing of its products. it is possible that any of its supplier relationships could be interrupted due to natural and other disasters and other events, or be terminated in the future. any sustained interruption in the company \u2019 s receipt of adequate supplies could have a material adverse effect on the company. in addition, while the company has a process to minimize volatility in component and material pricing, no assurance can be given that the company will be able to successfully manage price fluctuations or that future price fluctuations or shortages will not have a material adverse effect on the company. * acquisitions, strategic alliances, divestitures, and other unusual events resulting from portfolio management actions and other evolving business strategies, and possible organizational restructuring could affect future results. the company monitors its business portfolio and organizational structure and has made and may continue to make acquisitions, strategic alliances, dive\n</document>\n\n[E6] 3M 10k 2018, p.11\n<document>\n##stitures, and other unusual events resulting from portfolio management actions and other evolving business strategies, and possible organizational restructuring could affect future results. the company monitors its business portfolio and organizational structure and has made and may continue to make acquisitions, strategic alliances, divestitures and changes to its organizational structure. with respect to acquisitions, future results will be affected by the company \u2019 s ability to integrate acquired businesses quickly and obtain the anticipated synergies. * the company \u2019 s future results may be affected if the company generates fewer productivity improvements than estimated. the company utilizes various tools, such as lean six sigma, and engages in ongoing global business transformation. business transformation is defined as changes in processes and internal / external service delivery across 3m to move to more efficient business models to improve operational efficiency and productivity, while allowing 3m to serve customers with greater speed and efficiency. this is enabled by the ongoing multi - year phased implementation of an enterprise resource planning ( erp ) system on a worldwide basis. there can be no assurance that all of the projected productivity improvements will be realized. * the company employs information technology systems to support its business, including ongoing phased implementation of an erp system as part of business transformation on a worldwide basis over the next several years. security breaches and other disruptions to the company \u2019 s information technology infrastructure could interfere with the company \u2019 s operations, compromise information belonging to the company or its customers, suppliers, and employees, exposing the company to liability which could adversely impact the company \u2019 s business and reputation. in the ordinary course of business, the company relies on centralized and local information technology networks and systems, some of which are managed by third parties, to process, transmit and store electronic information, and to manage or support\n</document>",
-                "tool_use_id": "toolu_01WbE3B2K6W6n7xaPufFtppz",
+                "tool_use_id": "toolu_01ECyjZ2BTARXg1JT5bkTdco",
                 "type": "tool_result"
               }
             ],
@@ -48,11 +47,17 @@
                   "type": "string"
                 },
                 "doc_type": {
-                  "description": "e.g. 10K, 10Q, 8K, EARNINGS.",
+                  "description": "Document type as stored in this corpus. Spelling variants such as '10-K' are accepted.",
+                  "enum": [
+                    "10k",
+                    "10q",
+                    "8k",
+                    "Earnings"
+                  ],
                   "type": "string"
                 },
                 "fiscal_period": {
-                  "description": "Fiscal year, e.g. 2022.",
+                  "description": "Fiscal year as a four-digit string, e.g. '2022'.",
                   "type": "string"
                 },
                 "k": {
@@ -227,18 +232,17 @@
         "_fell_back": false,
         "content": [
           {
-            "text": "The graph query returned no COMPETES_WITH edges for 3M, and no named competitors appear in the retrieved passages either \u2014 the 3M 10-K text discusses competitive conditions only in general terms, without naming specific competitors.",
+            "text": "The graph query returned no COMPETES_WITH edges for 3M, and no relevant edges of any type were found.",
             "type": "text"
           },
           {
             "caller": {
               "type": "direct"
             },
-            "id": "toolu_013Sjg5C1KCHFSt7WfYi9dne",
+            "id": "toolu_01KuQVrSrQFsryn6Yh4jPfdD",
             "input": {
-              "answer_markdown": "The entity graph shows no `COMPETES_WITH` edges for 3M \u2014 the query returned zero relationships. The underlying 3M 10-K (FY2018) risk-factor language retrieved alongside it discusses \"global competition\" and \"competitive conditions and customer preferences\" only in generic terms (e.g., \"the success of products offered by our competitors\") without naming any specific competitor companies [E1][E3]. \n\n**This is not found in the indexed filings** \u2014 3M's 10-K risk factors section does not name specific competitors, and the graph has no COMPETES_WITH edges recorded for 3M.",
+              "answer_markdown": "The graph database contains no COMPETES_WITH edges (or any other edges) for 3M \u2014 the query returned an empty neighborhood. The retrieved 3M 10-K passages discuss competition generically (\"the company's results are affected by competitive conditions,\" \"success of products offered by our competitors\") but do not name specific competitor companies [E3]. This is not found in the indexed filings/graph.",
               "evidence_ids": [
-                "E1",
                 "E3"
               ]
             },
@@ -246,7 +250,7 @@
             "type": "tool_use"
           }
         ],
-        "id": "msg_011CekpmQ3qvPRAg8ZhNZnGF",
+        "id": "msg_011Ceku1kUHMTN4tTUp1hNk5",
         "model": "claude-sonnet-5",
         "role": "assistant",
         "stop_reason": "tool_use",
@@ -259,8 +263,8 @@
           "cache_creation_input_tokens": 0,
           "cache_read_input_tokens": 0,
           "inference_geo": "global",
-          "input_tokens": 6999,
-          "output_tokens": 354,
+          "input_tokens": 7015,
+          "output_tokens": 241,
           "output_tokens_details": {
             "thinking_tokens": 0
           },
@@ -268,7 +272,7 @@
         }
       }
     },
-    "71700a634e452ab63ec6fa05": {
+    "bcddc367f2288ec95706dfd7": {
       "request": {
         "messages": [
           {
@@ -288,11 +292,17 @@
                   "type": "string"
                 },
                 "doc_type": {
-                  "description": "e.g. 10K, 10Q, 8K, EARNINGS.",
+                  "description": "Document type as stored in this corpus. Spelling variants such as '10-K' are accepted.",
+                  "enum": [
+                    "10k",
+                    "10q",
+                    "8k",
+                    "Earnings"
+                  ],
                   "type": "string"
                 },
                 "fiscal_period": {
-                  "description": "Fiscal year, e.g. 2022.",
+                  "description": "Fiscal year as a four-digit string, e.g. '2022'.",
                   "type": "string"
                 },
                 "k": {
@@ -470,17 +480,16 @@
             "caller": {
               "type": "direct"
             },
-            "id": "toolu_01WbE3B2K6W6n7xaPufFtppz",
+            "id": "toolu_01ECyjZ2BTARXg1JT5bkTdco",
             "input": {
               "entity": "3M",
-              "hops": 1,
               "relation": "COMPETES_WITH"
             },
             "name": "graph_query",
             "type": "tool_use"
           }
         ],
-        "id": "msg_011CekpmDeXQGrtTEUP2AArY",
+        "id": "msg_011Ceku1ZqKEinQYYipN9hWq",
         "model": "claude-sonnet-5",
         "role": "assistant",
         "stop_reason": "tool_use",
@@ -493,8 +502,8 @@
           "cache_creation_input_tokens": 0,
           "cache_read_input_tokens": 0,
           "inference_geo": "global",
-          "input_tokens": 3223,
-          "output_tokens": 102,
+          "input_tokens": 3261,
+          "output_tokens": 80,
           "output_tokens_details": {
             "thinking_tokens": 0
           },
@@ -504,7 +513,7 @@
     }
   },
   "meta": {
-    "cost_usd_when_recorded": 0.025004,
+    "cost_usd_when_recorded": 0.023762,
     "expect": {
       "escalated": false,
       "final_state": "FINAL",
@@ -525,12 +534,121 @@
     },
     "fallback_model": "claude-haiku-4-5",
     "primary_model": "claude-sonnet-5",
-    "recorded_at": "2026-09-05T19:12:57Z",
-    "run_id": "run_bebcc17b0cb8",
+    "recorded_at": "2026-09-05T20:08:38Z",
+    "run_id": "run_d89deb761935",
     "scenario": "neo4j_fallback"
   },
   "order": [
-    "71700a634e452ab63ec6fa05",
-    "65bfb12d0018d62e75c166c5"
-  ]
+    "bcddc367f2288ec95706dfd7",
+    "920ba03b37df0be71ef0b54f"
+  ],
+  "tools": {
+    "graph_query:100ada90c9c382af:0": {
+      "ledger_adds": [
+        {
+          "citation": "3M 10k 2018, p.10",
+          "id": "E1",
+          "kind": "chunk",
+          "meta": {
+            "channels_hit": [
+              "graph"
+            ],
+            "chunk_id": "3M_2018_10K#p10#0#f10ed81f",
+            "company": "3M",
+            "doc_name": "3M_2018_10K",
+            "page_num": 10,
+            "rerank_score": null
+          },
+          "source_key": "chunk:3M_2018_10K#p10#0#f10ed81f",
+          "text": "table of contents forward - looking statements are based on certain assumptions and expectations of future events and trends that are subject to risks and uncertainties. actual future results and trends may differ materially from historical results or those reflected in any such forward - looking statements depending on a variety of factors. important information as to these factors can be found in this document, including, among others, \u201c management \u2019 s discussion and analysis of financial condition and results of operations \u201d under the headings of \u201c overview, \u201d \u201c financial condition and liquidity \u201d and annually in \u201c critical accounting estimates. \u201d discussion of these factors is incorporated by reference from part i, item 1a, \u201c risk factors, \u201d of this document, and should be considered an integral part of part ii, item 7, \u201c management \u2019 s discussion and analysis of financial condition and results of operations. \u201d for additional information concerning factors that may cause actual results to vary materially from those stated in the forward - looking statements, see our reports on form 10 - k, 10 - q and 8 - k filed with the sec from time to time. item 1a. risk factors provided below is a cautionary discussion of what we believe to be the most important risk factors applicable to the company. discussion of these factors is incorporated by reference into and considered an integral part of part i, item 2, \u201c management \u2019 s discussion and analysis of financial conditions and results of operations. \u201d * results are impacted by the effects of, and changes in, worldwide economic, political, and capital markets conditions. the company operates in more than 70 countries and derives approximately 60 percent of its revenues from outside the united states. the company \u2019 s business is subject to global competition and geopolitical risks and may be adversely affected by"
+        },
+        {
+          "citation": "3M 10k 2018, p.10",
+          "id": "E2",
+          "kind": "chunk",
+          "meta": {
+            "channels_hit": [
+              "graph"
+            ],
+            "chunk_id": "3M_2018_10K#p10#1#b19d7be2",
+            "company": "3M",
+            "doc_name": "3M_2018_10K",
+            "page_num": 10,
+            "rerank_score": null
+          },
+          "source_key": "chunk:3M_2018_10K#p10#1#b19d7be2",
+          "text": ", and capital markets conditions. the company operates in more than 70 countries and derives approximately 60 percent of its revenues from outside the united states. the company \u2019 s business is subject to global competition and geopolitical risks and may be adversely affected by factors in the united states and other countries that are beyond its control, such as slower economic growth, disruptions in financial markets, economic downturns in the form of either contained or widespread recessionary conditions, inflation, elevated unemployment levels, sluggish or uneven recovery, government actions impacting international trade agreements, imposing trade restrictions such as tariffs, and retaliatory counter measures, government deficit reduction and other austerity measures in specific countries or regions, or in the various industries in which the company operates ; social, political or labor conditions in specific countries or regions ; natural and other disasters or climate change affecting the operations of the company or its customers and suppliers ; or adverse changes in the availability and cost of capital, interest rates, tax rates, tax laws, or exchange control, ability to expatriate earnings and other regulations in the jurisdictions in which the company operates. * change in the company \u2019 s credit ratings could increase cost of funding. the company \u2019 s credit ratings are important to 3m \u2019 s cost of capital. the major rating agencies routinely evaluate the company \u2019 s credit profile and assign debt ratings to 3m. this evaluation is based on a number of factors, which include financial strength, business and financial risk, as well as transparency with rating agencies and timeliness of financial reporting. 3m currently has an aa - credit rating with a stable outlook from standard & poor \u2019 s and has an a1 credit rating with a stable outlook from moody \u2019 s investors service."
+        },
+        {
+          "citation": "3M 10k 2018, p.10",
+          "id": "E3",
+          "kind": "chunk",
+          "meta": {
+            "channels_hit": [
+              "graph"
+            ],
+            "chunk_id": "3M_2018_10K#p10#2#74fc661c",
+            "company": "3M",
+            "doc_name": "3M_2018_10K",
+            "page_num": 10,
+            "rerank_score": null
+          },
+          "source_key": "chunk:3M_2018_10K#p10#2#74fc661c",
+          "text": "as well as transparency with rating agencies and timeliness of financial reporting. 3m currently has an aa - credit rating with a stable outlook from standard & poor \u2019 s and has an a1 credit rating with a stable outlook from moody \u2019 s investors service. the company \u2019 s credit ratings have served to lower 3m \u2019 s borrowing costs and facilitate access to a variety of lenders. the addition of further leverage to the company \u2019 s capital structure could impact 3m \u2019 s credit ratings in the future. failure to maintain strong investment grade ratings would adversely affect the company \u2019 s cost of funding and could adversely affect liquidity and access to capital markets. * the company \u2019 s results are affected by competitive conditions and customer preferences. demand for the company \u2019 s products, which impacts revenue and profit margins, is affected by ( i ) the development and timing of the introduction of competitive products ; ( ii ) the company \u2019 s response to downward pricing to stay competitive ; ( iii ) changes in customer order patterns, such as changes in the levels of inventory maintained by customers and the timing of customer purchases which may be affected by announced price changes, changes in the company \u2019 s incentive programs, or the customer \u2019 s ability to achieve incentive goals ; ( iv ) changes in customers \u2019 preferences for our products, including the success of products offered by our competitors, and changes in customer designs for their products that can affect the demand for some of the company \u2019 s products ; and ( v ) changes in the business environment related to disruptive technologies, such as artificial intelligence, block - chain, expanded analytics and other enhanced learnings from increasing volume of available data. * foreign currency exchange rates and fluctuations in those rates may affect the company \u2019 s ability to realize projected"
+        },
+        {
+          "citation": "3M 10k 2018, p.10",
+          "id": "E4",
+          "kind": "chunk",
+          "meta": {
+            "channels_hit": [
+              "graph"
+            ],
+            "chunk_id": "3M_2018_10K#p10#3#d03f5666",
+            "company": "3M",
+            "doc_name": "3M_2018_10K",
+            "page_num": 10,
+            "rerank_score": null
+          },
+          "source_key": "chunk:3M_2018_10K#p10#3#d03f5666",
+          "text": "environment related to disruptive technologies, such as artificial intelligence, block - chain, expanded analytics and other enhanced learnings from increasing volume of available data. * foreign currency exchange rates and fluctuations in those rates may affect the company \u2019 s ability to realize projected growth rates in its sales and earnings. because the company \u2019 s financial statements are denominated in u. s. dollars and approximately 60 percent of the company \u2019 s revenues are derived from outside the united states, the company \u2019 s results of operations and its ability to realize projected growth rates in sales and earnings could be adversely affected if the u. s. dollar strengthens significantly against foreign currencies. 10"
+        },
+        {
+          "citation": "3M 10k 2018, p.11",
+          "id": "E5",
+          "kind": "chunk",
+          "meta": {
+            "channels_hit": [
+              "graph"
+            ],
+            "chunk_id": "3M_2018_10K#p11#0#c8afd537",
+            "company": "3M",
+            "doc_name": "3M_2018_10K",
+            "page_num": 11,
+            "rerank_score": null
+          },
+          "source_key": "chunk:3M_2018_10K#p11#0#c8afd537",
+          "text": "table of contents * the company \u2019 s growth objectives are largely dependent on the timing and market acceptance of its new product offerings, including its ability to continually renew its pipeline of new products and to bring those products to market. this ability may be adversely affected by difficulties or delays in product development, such as the inability to identify viable new products, obtain adequate intellectual property protection, or gain market acceptance of new products. there are no guarantees that new products will prove to be commercially successful. * the company \u2019 s future results are subject to fluctuations in the costs and availability of purchased components, compounds, raw materials and energy, including oil and natural gas and their derivatives, due to shortages, increased demand, supply interruptions, currency exchange risks, natural disasters and other factors. the company depends on various components, compounds, raw materials, and energy ( including oil and natural gas and their derivatives ) supplied by others for the manufacturing of its products. it is possible that any of its supplier relationships could be interrupted due to natural and other disasters and other events, or be terminated in the future. any sustained interruption in the company \u2019 s receipt of adequate supplies could have a material adverse effect on the company. in addition, while the company has a process to minimize volatility in component and material pricing, no assurance can be given that the company will be able to successfully manage price fluctuations or that future price fluctuations or shortages will not have a material adverse effect on the company. * acquisitions, strategic alliances, divestitures, and other unusual events resulting from portfolio management actions and other evolving business strategies, and possible organizational restructuring could affect future results. the company monitors its business portfolio and organizational structure and has made and may continue to make acquisitions, strategic alliances, dive"
+        },
+        {
+          "citation": "3M 10k 2018, p.11",
+          "id": "E6",
+          "kind": "chunk",
+          "meta": {
+            "channels_hit": [
+              "graph"
+            ],
+            "chunk_id": "3M_2018_10K#p11#1#0840e13a",
+            "company": "3M",
+            "doc_name": "3M_2018_10K",
+            "page_num": 11,
+            "rerank_score": null
+          },
+          "source_key": "chunk:3M_2018_10K#p11#1#0840e13a",
+          "text": "##stitures, and other unusual events resulting from portfolio management actions and other evolving business strategies, and possible organizational restructuring could affect future results. the company monitors its business portfolio and organizational structure and has made and may continue to make acquisitions, strategic alliances, divestitures and changes to its organizational structure. with respect to acquisitions, future results will be affected by the company \u2019 s ability to integrate acquired businesses quickly and obtain the anticipated synergies. * the company \u2019 s future results may be affected if the company generates fewer productivity improvements than estimated. the company utilizes various tools, such as lean six sigma, and engages in ongoing global business transformation. business transformation is defined as changes in processes and internal / external service delivery across 3m to move to more efficient business models to improve operational efficiency and productivity, while allowing 3m to serve customers with greater speed and efficiency. this is enabled by the ongoing multi - year phased implementation of an enterprise resource planning ( erp ) system on a worldwide basis. there can be no assurance that all of the projected productivity improvements will be realized. * the company employs information technology systems to support its business, including ongoing phased implementation of an erp system as part of business transformation on a worldwide basis over the next several years. security breaches and other disruptions to the company \u2019 s information technology infrastructure could interfere with the company \u2019 s operations, compromise information belonging to the company or its customers, suppliers, and employees, exposing the company to liability which could adversely impact the company \u2019 s business and reputation. in the ordinary course of business, the company relies on centralized and local information technology networks and systems, some of which are managed by third parties, to process, transmit and store electronic information, and to manage or support"
+        }
+      ],
+      "result": "Graph neighbourhood of 3m:\n(no edges)\n\nProvenance passages:\n[E1] 3M 10k 2018, p.10\n<document>\ntable of contents forward - looking statements are based on certain assumptions and expectations of future events and trends that are subject to risks and uncertainties. actual future results and trends may differ materially from historical results or those reflected in any such forward - looking statements depending on a variety of factors. important information as to these factors can be found in this document, including, among others, \u201c management \u2019 s discussion and analysis of financial condition and results of operations \u201d under the headings of \u201c overview, \u201d \u201c financial condition and liquidity \u201d and annually in \u201c critical accounting estimates. \u201d discussion of these factors is incorporated by reference from part i, item 1a, \u201c risk factors, \u201d of this document, and should be considered an integral part of part ii, item 7, \u201c management \u2019 s discussion and analysis of financial condition and results of operations. \u201d for additional information concerning factors that may cause actual results to vary materially from those stated in the forward - looking statements, see our reports on form 10 - k, 10 - q and 8 - k filed with the sec from time to time. item 1a. risk factors provided below is a cautionary discussion of what we believe to be the most important risk factors applicable to the company. discussion of these factors is incorporated by reference into and considered an integral part of part i, item 2, \u201c management \u2019 s discussion and analysis of financial conditions and results of operations. \u201d * results are impacted by the effects of, and changes in, worldwide economic, political, and capital markets conditions. the company operates in more than 70 countries and derives approximately 60 percent of its revenues from outside the united states. the company \u2019 s business is subject to global competition and geopolitical risks and may be adversely affected by\n</document>\n\n[E2] 3M 10k 2018, p.10\n<document>\n, and capital markets conditions. the company operates in more than 70 countries and derives approximately 60 percent of its revenues from outside the united states. the company \u2019 s business is subject to global competition and geopolitical risks and may be adversely affected by factors in the united states and other countries that are beyond its control, such as slower economic growth, disruptions in financial markets, economic downturns in the form of either contained or widespread recessionary conditions, inflation, elevated unemployment levels, sluggish or uneven recovery, government actions impacting international trade agreements, imposing trade restrictions such as tariffs, and retaliatory counter measures, government deficit reduction and other austerity measures in specific countries or regions, or in the various industries in which the company operates ; social, political or labor conditions in specific countries or regions ; natural and other disasters or climate change affecting the operations of the company or its customers and suppliers ; or adverse changes in the availability and cost of capital, interest rates, tax rates, tax laws, or exchange control, ability to expatriate earnings and other regulations in the jurisdictions in which the company operates. * change in the company \u2019 s credit ratings could increase cost of funding. the company \u2019 s credit ratings are important to 3m \u2019 s cost of capital. the major rating agencies routinely evaluate the company \u2019 s credit profile and assign debt ratings to 3m. this evaluation is based on a number of factors, which include financial strength, business and financial risk, as well as transparency with rating agencies and timeliness of financial reporting. 3m currently has an aa - credit rating with a stable outlook from standard & poor \u2019 s and has an a1 credit rating with a stable outlook from moody \u2019 s investors service.\n</document>\n\n[E3] 3M 10k 2018, p.10\n<document>\nas well as transparency with rating agencies and timeliness of financial reporting. 3m currently has an aa - credit rating with a stable outlook from standard & poor \u2019 s and has an a1 credit rating with a stable outlook from moody \u2019 s investors service. the company \u2019 s credit ratings have served to lower 3m \u2019 s borrowing costs and facilitate access to a variety of lenders. the addition of further leverage to the company \u2019 s capital structure could impact 3m \u2019 s credit ratings in the future. failure to maintain strong investment grade ratings would adversely affect the company \u2019 s cost of funding and could adversely affect liquidity and access to capital markets. * the company \u2019 s results are affected by competitive conditions and customer preferences. demand for the company \u2019 s products, which impacts revenue and profit margins, is affected by ( i ) the development and timing of the introduction of competitive products ; ( ii ) the company \u2019 s response to downward pricing to stay competitive ; ( iii ) changes in customer order patterns, such as changes in the levels of inventory maintained by customers and the timing of customer purchases which may be affected by announced price changes, changes in the company \u2019 s incentive programs, or the customer \u2019 s ability to achieve incentive goals ; ( iv ) changes in customers \u2019 preferences for our products, including the success of products offered by our competitors, and changes in customer designs for their products that can affect the demand for some of the company \u2019 s products ; and ( v ) changes in the business environment related to disruptive technologies, such as artificial intelligence, block - chain, expanded analytics and other enhanced learnings from increasing volume of available data. * foreign currency exchange rates and fluctuations in those rates may affect the company \u2019 s ability to realize projected\n</document>\n\n[E4] 3M 10k 2018, p.10\n<document>\nenvironment related to disruptive technologies, such as artificial intelligence, block - chain, expanded analytics and other enhanced learnings from increasing volume of available data. * foreign currency exchange rates and fluctuations in those rates may affect the company \u2019 s ability to realize projected growth rates in its sales and earnings. because the company \u2019 s financial statements are denominated in u. s. dollars and approximately 60 percent of the company \u2019 s revenues are derived from outside the united states, the company \u2019 s results of operations and its ability to realize projected growth rates in sales and earnings could be adversely affected if the u. s. dollar strengthens significantly against foreign currencies. 10\n</document>\n\n[E5] 3M 10k 2018, p.11\n<document>\ntable of contents * the company \u2019 s growth objectives are largely dependent on the timing and market acceptance of its new product offerings, including its ability to continually renew its pipeline of new products and to bring those products to market. this ability may be adversely affected by difficulties or delays in product development, such as the inability to identify viable new products, obtain adequate intellectual property protection, or gain market acceptance of new products. there are no guarantees that new products will prove to be commercially successful. * the company \u2019 s future results are subject to fluctuations in the costs and availability of purchased components, compounds, raw materials and energy, including oil and natural gas and their derivatives, due to shortages, increased demand, supply interruptions, currency exchange risks, natural disasters and other factors. the company depends on various components, compounds, raw materials, and energy ( including oil and natural gas and their derivatives ) supplied by others for the manufacturing of its products. it is possible that any of its supplier relationships could be interrupted due to natural and other disasters and other events, or be terminated in the future. any sustained interruption in the company \u2019 s receipt of adequate supplies could have a material adverse effect on the company. in addition, while the company has a process to minimize volatility in component and material pricing, no assurance can be given that the company will be able to successfully manage price fluctuations or that future price fluctuations or shortages will not have a material adverse effect on the company. * acquisitions, strategic alliances, divestitures, and other unusual events resulting from portfolio management actions and other evolving business strategies, and possible organizational restructuring could affect future results. the company monitors its business portfolio and organizational structure and has made and may continue to make acquisitions, strategic alliances, dive\n</document>\n\n[E6] 3M 10k 2018, p.11\n<document>\n##stitures, and other unusual events resulting from portfolio management actions and other evolving business strategies, and possible organizational restructuring could affect future results. the company monitors its business portfolio and organizational structure and has made and may continue to make acquisitions, strategic alliances, divestitures and changes to its organizational structure. with respect to acquisitions, future results will be affected by the company \u2019 s ability to integrate acquired businesses quickly and obtain the anticipated synergies. * the company \u2019 s future results may be affected if the company generates fewer productivity improvements than estimated. the company utilizes various tools, such as lean six sigma, and engages in ongoing global business transformation. business transformation is defined as changes in processes and internal / external service delivery across 3m to move to more efficient business models to improve operational efficiency and productivity, while allowing 3m to serve customers with greater speed and efficiency. this is enabled by the ongoing multi - year phased implementation of an enterprise resource planning ( erp ) system on a worldwide basis. there can be no assurance that all of the projected productivity improvements will be realized. * the company employs information technology systems to support its business, including ongoing phased implementation of an erp system as part of business transformation on a worldwide basis over the next several years. security breaches and other disruptions to the company \u2019 s information technology infrastructure could interfere with the company \u2019 s operations, compromise information belonging to the company or its customers, suppliers, and employees, exposing the company to liability which could adversely impact the company \u2019 s business and reputation. in the ordinary course of business, the company relies on centralized and local information technology networks and systems, some of which are managed by third parties, to process, transmit and store electronic information, and to manage or support\n</document>"
+    }
+  }
 }

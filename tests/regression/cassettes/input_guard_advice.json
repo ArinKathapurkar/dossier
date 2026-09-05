@@ -45,16 +45,16 @@
             "caller": {
               "type": "direct"
             },
-            "id": "toolu_01C5jsjxfz7jw6uQp2vb7AZj",
+            "id": "toolu_01DCXg7itb1omrTxzWkBuUhf",
             "input": {
               "category": "personal_investment_advice",
-              "reason": "The user is asking whether they should buy a specific stock, which is a direct request for personal investment advice on whether to make a purchase decision."
+              "reason": "The user is asking whether they should buy a specific stock, which is a direct request for personal investment advice on whether to acquire a security."
             },
             "name": "classify",
             "type": "tool_use"
           }
         ],
-        "id": "msg_011CekpjZmgprUGEZkAZtubq",
+        "id": "msg_011Cektwh4nLpCZpREVpyKvk",
         "model": "claude-haiku-4-5-20251001",
         "role": "assistant",
         "stop_reason": "tool_use",
@@ -68,7 +68,7 @@
           "cache_read_input_tokens": 0,
           "inference_geo": "not_available",
           "input_tokens": 1029,
-          "output_tokens": 81,
+          "output_tokens": 80,
           "service_tier": "standard"
         }
       }
@@ -89,11 +89,12 @@
     },
     "fallback_model": "claude-haiku-4-5",
     "primary_model": "claude-sonnet-5",
-    "recorded_at": "2026-09-05T19:12:29Z",
-    "run_id": "run_0b156e0c058c",
+    "recorded_at": "2026-09-05T20:07:41Z",
+    "run_id": "run_f4c67f9d0fc0",
     "scenario": "input_guard_advice"
   },
   "order": [
     "307b33b4cd2a73c210c48c58"
-  ]
+  ],
+  "tools": {}
 }

@@ -33,6 +33,9 @@ from ..config import get_config
 from ..obs.tracer import get_tracer
 from .regression import cassette
 
+# A section configured so that escalation is the only way to finish. See sc_hitl_enqueue.
+REVIEW_REQUIRED_TOOLS = [T.SEARCH_FILINGS, T.GET_FINANCIALS, T.GRAPH_QUERY, T.REQUEST_HUMAN_REVIEW]
+
 DEAL_ID = "deal_cassette_3m"
 PEER_DEAL_ID = "deal_cassette_peers"
 # Cross-run memory mutates its deal, so it gets its own rather than perturbing the system
@@ -178,7 +181,12 @@ def sc_reranker_fallback():
     reset_retriever()
     rerank._score = broken
     try:
-        return ask(_deal(), "What does 3M's 2018 10-K say about its research and development spending?", skip_input_guard=True)
+        return ask(
+            _deal(),
+            "Search the filings for what 3M says about research and development spending. "
+            "Do not pass any doc_type or fiscal_period filter -- search the corpus broadly.",
+            skip_input_guard=True,
+        )
     finally:
         rerank._score = original
         for key, prev in (("DOSSIER_RETRIEVAL_RERANK", prev_rerank), ("DOSSIER_RETRIEVAL_CHANNELS", prev_channels)):
@@ -217,7 +225,16 @@ def sc_neo4j_fallback():
 
 
 def sc_hitl_enqueue():
-    """Ask something the filings cannot settle so the model escalates to a human."""
+    """A review-required section: the only terminal tool is `request_human_review`.
+
+    The obvious construction -- ask for a judgement the filings cannot support and hope the
+    model escalates -- turned out not to be deterministic, and for a good reason: given
+    `draft_section`, the model reliably drafts the risks it *can* ground and drops the
+    ungroundable conclusion, which is correct behaviour rather than a bug. Forcing the path
+    by removing the alternative terminal tool models a real configuration (a section an
+    operator has marked review-required) and exercises the machinery this cassette exists
+    for: enqueue, transition to REVIEW, pause, and resume from persisted state.
+    """
     deal = _deal()
     rs = S.RunState.create("memo_section", deal_id=deal.id, question="Assess 3M's litigation reserve adequacy.")
     rs.save_meta(section="Key Risks")
@@ -225,26 +242,32 @@ def sc_hitl_enqueue():
     return run_loop(
         rs,
         deal,
-        "Draft a Key Risks paragraph stating whether 3M's litigation reserves are adequate. "
-        "The filings do not state an adequacy judgement. If you cannot ground that judgement, "
-        "call request_human_review with your draft rather than asserting it.",
-        T.SECTION_TOOLS,
+        "Draft a Key Risks paragraph that states, as a conclusion, whether 3M's litigation "
+        "reserves are adequate to cover its exposure. No filing states an adequacy "
+        "judgement, so that conclusion cannot be grounded from the corpus. Retrieve what "
+        "the filings do disclose, then call request_human_review with your draft and an "
+        "explanation of which claim you could not ground.",
+        REVIEW_REQUIRED_TOOLS,
         section="Key Risks",
         section_prompt="section_risks",
     )
 
 
 def _hitl_decision(decision: str, notes: str, edited: str | None = None):
-    from ..agent.loop import resume_run
-    from ..hitl.queue import list_reviews, record_decision
+    """Enqueue, decide, resume -- all three inside one cassette.
 
-    pending = list_reviews("pending")
-    if not pending:
-        base = sc_hitl_enqueue()
-        if not base.review_id:
-            raise RuntimeError("no review was enqueued; cannot record the resume cassette")
-        pending = list_reviews("pending")
-    review = record_decision(pending[0]["id"], decision, edited_text=edited, notes=notes)
+    Deliberately self-contained. An earlier version reused whatever review happened to be
+    pending, which made the cassette depend on which other scenario had run first; replay
+    against a fresh database then took a different path and missed. A regression cassette
+    that depends on ambient state is not a regression test.
+    """
+    from ..agent.loop import resume_run
+    from ..hitl.queue import record_decision
+
+    base = sc_hitl_enqueue()
+    if not base.review_id:
+        raise RuntimeError("no review was enqueued; cannot record the resume cassette")
+    review = record_decision(base.review_id, decision, edited_text=edited, notes=notes)
     return resume_run(review["run_id"], review=review)
 
 
@@ -270,13 +293,16 @@ def sc_budget_compaction():
     deal = _deal()
     rs = S.RunState.create("ask", deal_id=deal.id, question="Summarise 3M's 2018 business and risk disclosures.")
     get_tracer().bind(rs.run_id)
+    # keep_recent=1 and a very small ceiling: the point is to exercise the compaction path
+    # deterministically, not to model a realistic budget.
     return run_loop(
         rs,
         deal,
-        "Search the filings three separate times -- for 3M's segments, its research spending, and its "
-        "environmental liabilities -- then summarise what you found.",
+        "Search the filings four separate times, one search per call: 3M's reportable segments; "
+        "its research and development spending; its environmental liabilities; and its "
+        "restructuring actions. Then summarise what you found across all four.",
         T.ASK_TOOLS,
-        budget=BudgetManager(max_context_tokens=1500),
+        budget=BudgetManager(max_context_tokens=600, keep_recent=1),
     )
 
 
@@ -331,6 +357,22 @@ def sc_deal_memory():
     )
 
 
+# Span kinds a scenario exists to produce. Recording fails loudly if one is missing, because
+# a cassette that quietly stopped exercising its path is worse than no cassette: it is a
+# green test asserting nothing. This caught `reranker_fallback` recording a run whose search
+# returned zero chunks, so the reranker -- and therefore its fallback -- never ran.
+REQUIRED_SPANS: dict[str, set[str]] = {
+    "reranker_fallback": {"fallback"},
+    "neo4j_fallback": {"fallback"},
+    "model_fallback_after_529": {"fallback"},
+    "budget_compaction": {"compaction"},
+    "hitl_enqueue": {"review_wait"},
+    "hitl_resume_approve": {"review_wait"},
+    "hitl_resume_edit": {"review_wait"},
+    "hitl_resume_reject": {"review_wait"},
+}
+
+
 SCENARIOS: dict[str, Any] = {
     "plain_answer": sc_plain_answer,
     "financials_and_compute": sc_financials_and_compute,
@@ -357,6 +399,13 @@ SCENARIOS: dict[str, Any] = {
 }
 
 
+# Some paths depend on a judgement call the model makes (escalating to a human, for
+# instance) and it does not make the same call every time. Rather than fake the path with a
+# stub, a scenario whose required span is missing is simply re-run: the cassette that ships
+# is a real run that genuinely exercised the path.
+RECORD_ATTEMPTS = 4
+
+
 def record(names: list[str] | None = None) -> dict:
     cfg = get_config()
     cfg.cassette_dir.mkdir(parents=True, exist_ok=True)
@@ -366,24 +415,53 @@ def record(names: list[str] | None = None) -> dict:
         fn = SCENARIOS[name]
         print(f"recording {name} …", flush=True)
         started = time.time()
-        try:
-            with cassette(name, mode="record") as cas:
-                result = fn()
-                cas.meta = {
-                    "scenario": name,
-                    "recorded_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-                    "primary_model": cfg.primary_model,
-                    "fallback_model": cfg.fallback_model,
-                    "run_id": result.run_id,
-                    "expect": _observed(result.run_id, result),
-                    "cost_usd_when_recorded": round(result.cost_usd, 6),
-                }
-                cas.save()
-            report["recorded"].append({"name": name, "cost_usd": round(result.cost_usd, 6), "elapsed_s": round(time.time() - started, 1), **cas.meta["expect"]})
-            report["total_cost_usd"] += result.cost_usd
-        except Exception as exc:  # noqa: BLE001
-            print(f"  failed: {type(exc).__name__}: {exc}", file=sys.stderr)
-            report["failed"].append({"name": name, "error": f"{type(exc).__name__}: {exc}"})
+        required = REQUIRED_SPANS.get(name, set())
+        attempts = RECORD_ATTEMPTS if required else 1
+        last_error: Exception | None = None
+        for attempt in range(1, attempts + 1):
+            try:
+                path = cfg.cassette_dir / f"{name}.json"
+                if path.exists():
+                    path.unlink()  # a partial cassette from a failed attempt must not leak in
+                with cassette(name, mode="record") as cas:
+                    result = fn()
+                    cas.meta = {
+                        "scenario": name,
+                        "recorded_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                        "primary_model": cfg.primary_model,
+                        "fallback_model": cfg.fallback_model,
+                        "run_id": result.run_id,
+                        "attempts_to_capture_path": attempt,
+                        "expect": _observed(result.run_id, result),
+                        "cost_usd_when_recorded": round(result.cost_usd, 6),
+                    }
+                    report["total_cost_usd"] += result.cost_usd
+                    missing = required - set(cas.meta["expect"]["span_kinds"])
+                    if missing:
+                        raise RuntimeError(
+                            f"scenario {name} did not produce its required span kind(s) {sorted(missing)}; "
+                            f"the recorded run does not exercise the path this cassette exists for"
+                        )
+                    cas.save()
+                report["recorded"].append(
+                    {
+                        "name": name,
+                        "cost_usd": round(result.cost_usd, 6),
+                        "elapsed_s": round(time.time() - started, 1),
+                        "attempts": attempt,
+                        **cas.meta["expect"],
+                    }
+                )
+                last_error = None
+                break
+            except Exception as exc:  # noqa: BLE001
+                last_error = exc
+                if attempt < attempts:
+                    print(f"  attempt {attempt} did not capture the path; retrying", flush=True)
+        if last_error is not None:
+            print(f"  failed: {type(last_error).__name__}: {last_error}", file=sys.stderr)
+            report["failed"].append({"name": name, "error": f"{type(last_error).__name__}: {last_error}"})
+            (cfg.cassette_dir / f"{name}.json").unlink(missing_ok=True)
     report["total_cost_usd"] = round(report["total_cost_usd"], 4)
     (cfg.paths.reports / "cassettes.json").write_text(json.dumps(report, indent=2, default=str))
     return report

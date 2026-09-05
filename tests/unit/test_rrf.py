@@ -36,3 +36,42 @@ def test_weights_are_applied_per_channel():
 def test_citation_format():
     assert format_citation("3M", "10K", "2018", 60) == "3M 10K 2018, p.60"
     assert format_citation("3M", "", "", 4) == "3M, p.4"
+
+
+# -- filters ------------------------------------------------------------------------
+
+def test_doc_type_filters_match_across_spellings():
+    """Regression: the corpus stores FinanceBench's own '10k' label while every model
+    writes '10-K'. An exact match returned nothing and the agent reported "not found in the
+    indexed filings" -- a false abstention with no error anywhere."""
+    from dossier.index.vector_store import build_filter, doc_type_variants
+
+    for spelling in ("10-K", "10K", "10k"):
+        variants = doc_type_variants(spelling)
+        assert "10k" in variants and "10K" in variants
+    where = build_filter({"company": "3M", "doc_type": "10-K"})
+    assert "'10k'" in where and "company = '3M'" in where
+
+
+def test_bm25_and_vector_filters_agree_on_doc_type():
+    from dossier.index.bm25_store import BM25Store
+
+    store = BM25Store()
+    row = {"company": "3M", "doc_type": "10k", "fiscal_period": "2018", "doc_name": "3M_2018_10K"}
+    for spelling in ("10-K", "10K", "10k"):
+        assert store._matches(row, {"doc_type": spelling}), spelling
+    assert not store._matches(row, {"doc_type": "8k"})
+
+
+def test_other_filters_stay_exact():
+    from dossier.index.vector_store import build_filter
+
+    where = build_filter({"company": "3M", "fiscal_period": "2018"})
+    assert where == "company = '3M' AND fiscal_period = '2018'"
+
+
+def test_sql_injection_in_a_filter_value_is_escaped():
+    from dossier.index.vector_store import build_filter
+
+    where = build_filter({"company": "3M' OR '1'='1"})
+    assert where == "company = '3M'' OR ''1''=''1'"

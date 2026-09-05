@@ -1,6 +1,6 @@
 {
   "entries": {
-    "15adfb598b2453c8875cf5d6": {
+    "f3271330e276f327028adb4b": {
       "request": {
         "messages": [
           {
@@ -20,11 +20,17 @@
                   "type": "string"
                 },
                 "doc_type": {
-                  "description": "e.g. 10K, 10Q, 8K, EARNINGS.",
+                  "description": "Document type as stored in this corpus. Spelling variants such as '10-K' are accepted.",
+                  "enum": [
+                    "10k",
+                    "10q",
+                    "8k",
+                    "Earnings"
+                  ],
                   "type": "string"
                 },
                 "fiscal_period": {
-                  "description": "Fiscal year, e.g. 2022.",
+                  "description": "Fiscal year as a four-digit string, e.g. '2022'.",
                   "type": "string"
                 },
                 "k": {
@@ -199,7 +205,7 @@
         "_fell_back": false,
         "content": [
           {
-            "signature": "Eq8DCpABCBEYAipATjf/TqBJNARz7xlPqR0vKYFalbQvLaCD3coto0b9TV1XoqztoDKqJDtE11Cs7iNeqjUxdj+o+yR5D42RdmOItzIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiQxYTk2MWE4Ni02Mjc5LTQ2ZWEtYWFiNy0zM2M3NDdmNzI2OTeoAerU8dQGEgzKlYi+s/AAgnDT0yAaDHJEV1FC7dxJKMP6xiIwZRu5DTMytVv/uVzT7iUoJfcNPYczqCqzXVHvo9M8ozHeuopmVugsgnPCrg0CLXIpKssBHtlq9710WEnfju8ocqhlb8fWbT7VSeDs2Bc4NYJilgZzmAUqdqsha0OYpRN8gUh9hCclnkiSId2BdA7VlSaZ+Y2F5WyVgLWCwH6m5Pe4Meqdym87Z7n5ET1RZAoN+niDuxgncVHotlUXgdG9aA+YzWHWRBikeNRMMIU/LknECDBmpklV7GSt7omEmCB/Uv1Gg0USg1uiPTD0DVJqQQnQOmb1XNW8ozHvCvYt7ZCZa8GGmOxVhgKCnIqQMXLEz4RVR3Fy5VRI/RueFocYAQ==",
+            "signature": "EqcDCpABCBEYAipAVxohol7AneRcNOg0La3QPgS37RcgpmYp5qXTsCq/ZLcYgufm+1hKBXEqMvxFQ5H/S5axSycRHhXG7dzADMOxPTIPY2xhdWRlLXNvbm5ldC01OABCCHRoaW5raW5nWiQxYTk2MWE4Ni02Mjc5LTQ2ZWEtYWFiNy0zM2M3NDdmNzI2OTeoAbTv8dQGEgySzSC9mrLsFKmxMYIaDJhZcd+Pb3qtiWH2vCIwQ8hqdNl3UFGjLfrfnK2jaqxcjq3kicxNhwEBqSRtak0rCpr0dw023yjYHPnkZrL1KsMBPevC5RJCO9BNH2bH2GQzlTvgFzzbJEoCQjnbinLFLTi6o4Br0TYt2qzJu/PZOI0o3nsDXzQkuZRpHl0XHjnY4ZFWL3ytd59wxctNvLnePE9VYU4e88fl+0bIOT2UJvJURXS3VFQlQDDg11tAlUAXCMtanMKwv1G3nhMA58CPZgIyPu1zfEZuHUEVwkjqwmkotiXeofBGR/a8izh5n+7rfktp7pRWG2yQkEi8ZqiHyQ4I/bH3qek2KP5Z2D29ZKdt4PEhGAE=",
             "thinking": "",
             "type": "thinking"
           },
@@ -207,7 +213,7 @@
             "caller": {
               "type": "direct"
             },
-            "id": "toolu_01GQqebYBiUh4Qp7WikrUqCn",
+            "id": "toolu_01KMU5L7W2tEfouXYzTGE51V",
             "input": {
               "company": "3M",
               "concepts": [
@@ -229,7 +235,7 @@
             "type": "tool_use"
           }
         ],
-        "id": "msg_011CekpzaienXdHYqhcKkfDJ",
+        "id": "msg_011CekuKKV7i5nS3J33teqkf",
         "model": "claude-sonnet-5",
         "role": "assistant",
         "stop_reason": "tool_use",
@@ -242,10 +248,10 @@
           "cache_creation_input_tokens": 0,
           "cache_read_input_tokens": 0,
           "inference_geo": "global",
-          "input_tokens": 3260,
-          "output_tokens": 283,
+          "input_tokens": 3298,
+          "output_tokens": 280,
           "output_tokens_details": {
-            "thinking_tokens": 95
+            "thinking_tokens": 94
           },
           "service_tier": "standard"
         }
@@ -253,7 +259,7 @@
     }
   },
   "meta": {
-    "cost_usd_when_recorded": 0.00935,
+    "cost_usd_when_recorded": 0.009396,
     "expect": {
       "escalated": false,
       "final_state": "FINAL",
@@ -271,11 +277,568 @@
     },
     "fallback_model": "claude-haiku-4-5",
     "primary_model": "claude-sonnet-5",
-    "recorded_at": "2026-09-05T19:15:54Z",
-    "run_id": "run_39437c8acf92",
+    "recorded_at": "2026-09-05T20:12:36Z",
+    "run_id": "run_7add0a888ba1",
     "scenario": "cost_cap"
   },
   "order": [
-    "15adfb598b2453c8875cf5d6"
-  ]
+    "f3271330e276f327028adb4b"
+  ],
+  "tools": {
+    "get_financials:7020bedd7b38fd32:0": {
+      "ledger_adds": [
+        {
+          "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2022 (10-K filed 2025-02-05)",
+          "id": "F1",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "filed": "2025-02-05",
+            "fiscal_year": 2022,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2024,
+            "period_days": 364,
+            "period_end": "2022-12-31",
+            "period_start": "2022-01-01",
+            "unit": "USD",
+            "value": 5591000000.0
+          },
+          "source_key": "fact:3M:NetCashProvidedByUsedInOperatingActivities:USD:2022-01-01:2022-12-31",
+          "text": "3M NetCashProvidedByUsedInOperatingActivities = 5591000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2021 (10-K filed 2024-02-07)",
+          "id": "F2",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "filed": "2024-02-07",
+            "fiscal_year": 2021,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2023,
+            "period_days": 364,
+            "period_end": "2021-12-31",
+            "period_start": "2021-01-01",
+            "unit": "USD",
+            "value": 7454000000.0
+          },
+          "source_key": "fact:3M:NetCashProvidedByUsedInOperatingActivities:USD:2021-01-01:2021-12-31",
+          "text": "3M NetCashProvidedByUsedInOperatingActivities = 7454000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2020 (10-K filed 2023-02-08)",
+          "id": "F3",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "filed": "2023-02-08",
+            "fiscal_year": 2020,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2022,
+            "period_days": 365,
+            "period_end": "2020-12-31",
+            "period_start": "2020-01-01",
+            "unit": "USD",
+            "value": 8113000000.0
+          },
+          "source_key": "fact:3M:NetCashProvidedByUsedInOperatingActivities:USD:2020-01-01:2020-12-31",
+          "text": "3M NetCashProvidedByUsedInOperatingActivities = 8113000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2019 (10-K filed 2022-02-09)",
+          "id": "F4",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "filed": "2022-02-09",
+            "fiscal_year": 2019,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2021,
+            "period_days": 364,
+            "period_end": "2019-12-31",
+            "period_start": "2019-01-01",
+            "unit": "USD",
+            "value": 7070000000.0
+          },
+          "source_key": "fact:3M:NetCashProvidedByUsedInOperatingActivities:USD:2019-01-01:2019-12-31",
+          "text": "3M NetCashProvidedByUsedInOperatingActivities = 7070000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2018 (10-K filed 2021-02-04)",
+          "id": "F5",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetCashProvidedByUsedInOperatingActivities",
+            "filed": "2021-02-04",
+            "fiscal_year": 2018,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2020,
+            "period_days": 364,
+            "period_end": "2018-12-31",
+            "period_start": "2018-01-01",
+            "unit": "USD",
+            "value": 6439000000.0
+          },
+          "source_key": "fact:3M:NetCashProvidedByUsedInOperatingActivities:USD:2018-01-01:2018-12-31",
+          "text": "3M NetCashProvidedByUsedInOperatingActivities = 6439000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetIncomeLoss FY2022 (10-K filed 2025-02-05)",
+          "id": "F6",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetIncomeLoss",
+            "filed": "2025-02-05",
+            "fiscal_year": 2022,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2024,
+            "period_days": 364,
+            "period_end": "2022-12-31",
+            "period_start": "2022-01-01",
+            "unit": "USD",
+            "value": 5777000000.0
+          },
+          "source_key": "fact:3M:NetIncomeLoss:USD:2022-01-01:2022-12-31",
+          "text": "3M NetIncomeLoss = 5777000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetIncomeLoss FY2021 (10-K filed 2024-02-07)",
+          "id": "F7",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetIncomeLoss",
+            "filed": "2024-02-07",
+            "fiscal_year": 2021,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2023,
+            "period_days": 364,
+            "period_end": "2021-12-31",
+            "period_start": "2021-01-01",
+            "unit": "USD",
+            "value": 5921000000.0
+          },
+          "source_key": "fact:3M:NetIncomeLoss:USD:2021-01-01:2021-12-31",
+          "text": "3M NetIncomeLoss = 5921000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetIncomeLoss FY2020 (10-K filed 2023-02-08)",
+          "id": "F8",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetIncomeLoss",
+            "filed": "2023-02-08",
+            "fiscal_year": 2020,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2022,
+            "period_days": 365,
+            "period_end": "2020-12-31",
+            "period_start": "2020-01-01",
+            "unit": "USD",
+            "value": 5449000000.0
+          },
+          "source_key": "fact:3M:NetIncomeLoss:USD:2020-01-01:2020-12-31",
+          "text": "3M NetIncomeLoss = 5449000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetIncomeLoss FY2019 (10-K filed 2022-02-09)",
+          "id": "F9",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetIncomeLoss",
+            "filed": "2022-02-09",
+            "fiscal_year": 2019,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2021,
+            "period_days": 364,
+            "period_end": "2019-12-31",
+            "period_start": "2019-01-01",
+            "unit": "USD",
+            "value": 4517000000.0
+          },
+          "source_key": "fact:3M:NetIncomeLoss:USD:2019-01-01:2019-12-31",
+          "text": "3M NetIncomeLoss = 4517000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09."
+        },
+        {
+          "citation": "3M XBRL companyfacts NetIncomeLoss FY2018 (10-K filed 2021-02-04)",
+          "id": "F10",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "NetIncomeLoss",
+            "filed": "2021-02-04",
+            "fiscal_year": 2018,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2020,
+            "period_days": 364,
+            "period_end": "2018-12-31",
+            "period_start": "2018-01-01",
+            "unit": "USD",
+            "value": 5349000000.0
+          },
+          "source_key": "fact:3M:NetIncomeLoss:USD:2018-01-01:2018-12-31",
+          "text": "3M NetIncomeLoss = 5349000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+        },
+        {
+          "citation": "3M XBRL companyfacts OperatingIncomeLoss FY2022 (10-K filed 2025-02-05)",
+          "id": "F11",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "OperatingIncomeLoss",
+            "filed": "2025-02-05",
+            "fiscal_year": 2022,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2024,
+            "period_days": 364,
+            "period_end": "2022-12-31",
+            "period_start": "2022-01-01",
+            "unit": "USD",
+            "value": 4369000000.0
+          },
+          "source_key": "fact:3M:OperatingIncomeLoss:USD:2022-01-01:2022-12-31",
+          "text": "3M OperatingIncomeLoss = 4369000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05."
+        },
+        {
+          "citation": "3M XBRL companyfacts OperatingIncomeLoss FY2021 (10-K filed 2024-02-07)",
+          "id": "F12",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "OperatingIncomeLoss",
+            "filed": "2024-02-07",
+            "fiscal_year": 2021,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2023,
+            "period_days": 364,
+            "period_end": "2021-12-31",
+            "period_start": "2021-01-01",
+            "unit": "USD",
+            "value": 7369000000.0
+          },
+          "source_key": "fact:3M:OperatingIncomeLoss:USD:2021-01-01:2021-12-31",
+          "text": "3M OperatingIncomeLoss = 7369000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07."
+        },
+        {
+          "citation": "3M XBRL companyfacts OperatingIncomeLoss FY2020 (10-K filed 2023-02-08)",
+          "id": "F13",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "OperatingIncomeLoss",
+            "filed": "2023-02-08",
+            "fiscal_year": 2020,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2022,
+            "period_days": 365,
+            "period_end": "2020-12-31",
+            "period_start": "2020-01-01",
+            "unit": "USD",
+            "value": 7161000000.0
+          },
+          "source_key": "fact:3M:OperatingIncomeLoss:USD:2020-01-01:2020-12-31",
+          "text": "3M OperatingIncomeLoss = 7161000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08."
+        },
+        {
+          "citation": "3M XBRL companyfacts OperatingIncomeLoss FY2019 (10-K filed 2022-02-09)",
+          "id": "F14",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "OperatingIncomeLoss",
+            "filed": "2022-02-09",
+            "fiscal_year": 2019,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2021,
+            "period_days": 364,
+            "period_end": "2019-12-31",
+            "period_start": "2019-01-01",
+            "unit": "USD",
+            "value": 6174000000.0
+          },
+          "source_key": "fact:3M:OperatingIncomeLoss:USD:2019-01-01:2019-12-31",
+          "text": "3M OperatingIncomeLoss = 6174000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09."
+        },
+        {
+          "citation": "3M XBRL companyfacts OperatingIncomeLoss FY2018 (10-K filed 2021-02-04)",
+          "id": "F15",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "OperatingIncomeLoss",
+            "filed": "2021-02-04",
+            "fiscal_year": 2018,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2020,
+            "period_days": 364,
+            "period_end": "2018-12-31",
+            "period_start": "2018-01-01",
+            "unit": "USD",
+            "value": 7207000000.0
+          },
+          "source_key": "fact:3M:OperatingIncomeLoss:USD:2018-01-01:2018-12-31",
+          "text": "3M OperatingIncomeLoss = 7207000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+        },
+        {
+          "citation": "3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2022 (10-K filed 2025-02-05)",
+          "id": "F16",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "filed": "2025-02-05",
+            "fiscal_year": 2022,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2024,
+            "period_days": 364,
+            "period_end": "2022-12-31",
+            "period_start": "2022-01-01",
+            "unit": "USD",
+            "value": 1749000000.0
+          },
+          "source_key": "fact:3M:PaymentsToAcquirePropertyPlantAndEquipment:USD:2022-01-01:2022-12-31",
+          "text": "3M PaymentsToAcquirePropertyPlantAndEquipment = 1749000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05."
+        },
+        {
+          "citation": "3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2021 (10-K filed 2024-02-07)",
+          "id": "F17",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "filed": "2024-02-07",
+            "fiscal_year": 2021,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2023,
+            "period_days": 364,
+            "period_end": "2021-12-31",
+            "period_start": "2021-01-01",
+            "unit": "USD",
+            "value": 1603000000.0
+          },
+          "source_key": "fact:3M:PaymentsToAcquirePropertyPlantAndEquipment:USD:2021-01-01:2021-12-31",
+          "text": "3M PaymentsToAcquirePropertyPlantAndEquipment = 1603000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07."
+        },
+        {
+          "citation": "3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2020 (10-K filed 2023-02-08)",
+          "id": "F18",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "filed": "2023-02-08",
+            "fiscal_year": 2020,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2022,
+            "period_days": 365,
+            "period_end": "2020-12-31",
+            "period_start": "2020-01-01",
+            "unit": "USD",
+            "value": 1501000000.0
+          },
+          "source_key": "fact:3M:PaymentsToAcquirePropertyPlantAndEquipment:USD:2020-01-01:2020-12-31",
+          "text": "3M PaymentsToAcquirePropertyPlantAndEquipment = 1501000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08."
+        },
+        {
+          "citation": "3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2019 (10-K filed 2022-02-09)",
+          "id": "F19",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "filed": "2022-02-09",
+            "fiscal_year": 2019,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2021,
+            "period_days": 364,
+            "period_end": "2019-12-31",
+            "period_start": "2019-01-01",
+            "unit": "USD",
+            "value": 1699000000.0
+          },
+          "source_key": "fact:3M:PaymentsToAcquirePropertyPlantAndEquipment:USD:2019-01-01:2019-12-31",
+          "text": "3M PaymentsToAcquirePropertyPlantAndEquipment = 1699000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09."
+        },
+        {
+          "citation": "3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2018 (10-K filed 2021-02-04)",
+          "id": "F20",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+            "filed": "2021-02-04",
+            "fiscal_year": 2018,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2020,
+            "period_days": 364,
+            "period_end": "2018-12-31",
+            "period_start": "2018-01-01",
+            "unit": "USD",
+            "value": 1577000000.0
+          },
+          "source_key": "fact:3M:PaymentsToAcquirePropertyPlantAndEquipment:USD:2018-01-01:2018-12-31",
+          "text": "3M PaymentsToAcquirePropertyPlantAndEquipment = 1577000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+        },
+        {
+          "citation": "3M XBRL companyfacts Revenues FY2022 (10-K filed 2025-02-05)",
+          "id": "F21",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "Revenues",
+            "filed": "2025-02-05",
+            "fiscal_year": 2022,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2024,
+            "period_days": 364,
+            "period_end": "2022-12-31",
+            "period_start": "2022-01-01",
+            "unit": "USD",
+            "value": 26161000000.0
+          },
+          "source_key": "fact:3M:Revenues:USD:2022-01-01:2022-12-31",
+          "text": "3M Revenues = 26161000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05."
+        },
+        {
+          "citation": "3M XBRL companyfacts Revenues FY2021 (10-K filed 2024-02-07)",
+          "id": "F22",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "Revenues",
+            "filed": "2024-02-07",
+            "fiscal_year": 2021,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2023,
+            "period_days": 364,
+            "period_end": "2021-12-31",
+            "period_start": "2021-01-01",
+            "unit": "USD",
+            "value": 35355000000.0
+          },
+          "source_key": "fact:3M:Revenues:USD:2021-01-01:2021-12-31",
+          "text": "3M Revenues = 35355000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07."
+        },
+        {
+          "citation": "3M XBRL companyfacts Revenues FY2020 (10-K filed 2023-02-08)",
+          "id": "F23",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "Revenues",
+            "filed": "2023-02-08",
+            "fiscal_year": 2020,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2022,
+            "period_days": 365,
+            "period_end": "2020-12-31",
+            "period_start": "2020-01-01",
+            "unit": "USD",
+            "value": 32184000000.0
+          },
+          "source_key": "fact:3M:Revenues:USD:2020-01-01:2020-12-31",
+          "text": "3M Revenues = 32184000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08."
+        },
+        {
+          "citation": "3M XBRL companyfacts Revenues FY2019 (10-K filed 2022-02-09)",
+          "id": "F24",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "Revenues",
+            "filed": "2022-02-09",
+            "fiscal_year": 2019,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2021,
+            "period_days": 364,
+            "period_end": "2019-12-31",
+            "period_start": "2019-01-01",
+            "unit": "USD",
+            "value": 32136000000.0
+          },
+          "source_key": "fact:3M:Revenues:USD:2019-01-01:2019-12-31",
+          "text": "3M Revenues = 32136000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09."
+        },
+        {
+          "citation": "3M XBRL companyfacts Revenues FY2018 (10-K filed 2021-02-04)",
+          "id": "F25",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "Revenues",
+            "filed": "2021-02-04",
+            "fiscal_year": 2018,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2020,
+            "period_days": 364,
+            "period_end": "2018-12-31",
+            "period_start": "2018-01-01",
+            "unit": "USD",
+            "value": 32765000000.0
+          },
+          "source_key": "fact:3M:Revenues:USD:2018-01-01:2018-12-31",
+          "text": "3M Revenues = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+        }
+      ],
+      "result": "XBRL facts (source: SEC companyfacts):\n[F1] 3M NetCashProvidedByUsedInOperatingActivities = 5591000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05.\n[F2] 3M NetCashProvidedByUsedInOperatingActivities = 7454000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07.\n[F3] 3M NetCashProvidedByUsedInOperatingActivities = 8113000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08.\n[F4] 3M NetCashProvidedByUsedInOperatingActivities = 7070000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09.\n[F5] 3M NetCashProvidedByUsedInOperatingActivities = 6439000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04.\n[F6] 3M NetIncomeLoss = 5777000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05.\n[F7] 3M NetIncomeLoss = 5921000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07.\n[F8] 3M NetIncomeLoss = 5449000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08.\n[F9] 3M NetIncomeLoss = 4517000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09.\n[F10] 3M NetIncomeLoss = 5349000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04.\n[F11] 3M OperatingIncomeLoss = 4369000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05.\n[F12] 3M OperatingIncomeLoss = 7369000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07.\n[F13] 3M OperatingIncomeLoss = 7161000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08.\n[F14] 3M OperatingIncomeLoss = 6174000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09.\n[F15] 3M OperatingIncomeLoss = 7207000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04.\n[F16] 3M PaymentsToAcquirePropertyPlantAndEquipment = 1749000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05.\n[F17] 3M PaymentsToAcquirePropertyPlantAndEquipment = 1603000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07.\n[F18] 3M PaymentsToAcquirePropertyPlantAndEquipment = 1501000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08.\n[F19] 3M PaymentsToAcquirePropertyPlantAndEquipment = 1699000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09.\n[F20] 3M PaymentsToAcquirePropertyPlantAndEquipment = 1577000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04.\n[F21] 3M Revenues = 26161000000.0 USD for fiscal year 2022 (2022-01-01 to 2022-12-31), per 10-K filed 2025-02-05.\n[F22] 3M Revenues = 35355000000.0 USD for fiscal year 2021 (2021-01-01 to 2021-12-31), per 10-K filed 2024-02-07.\n[F23] 3M Revenues = 32184000000.0 USD for fiscal year 2020 (2020-01-01 to 2020-12-31), per 10-K filed 2023-02-08.\n[F24] 3M Revenues = 32136000000.0 USD for fiscal year 2019 (2019-01-01 to 2019-12-31), per 10-K filed 2022-02-09.\n[F25] 3M Revenues = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+    }
+  }
 }

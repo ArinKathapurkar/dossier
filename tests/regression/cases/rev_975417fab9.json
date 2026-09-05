@@ -1,0 +1,10 @@
+{
+  "case_id": "rev_975417fab9",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "approved",
+  "reviewer_notes": "Fine as written; keep the caveat about the reserve being undisclosed.",
+  "reason_escalated": "The question asks whether 3M's litigation reserves are adequate. The filings do not make or support an adequacy judgement \u2014 3M explicitly states it cannot estimate a probable loss or range of loss for major matters (e.g., Combat Arms Earplugs, non-committed portion), and reserves are limited to specific negotiated funding commitments (e.g., ~$1.0-1.2B Combat Arms accrual) rather than a company assertion that total reserves are \"adequate.\" Asserting adequacy (or inadequacy) would go beyond what is disclosed and would be an unsupported judgement call requiring human sign-off.",
+  "expect": {}
+}

@@ -61,6 +61,10 @@ class BM25Store:
         return self.path.exists() and self.path.stat().st_size > 0
 
     def _matches(self, row: dict, filters: dict[str, Any] | None) -> bool:
+        """Post-hoc filter, matching the vector store's semantics including doc_type
+        spelling variants -- see index/vector_store.doc_type_variants."""
+        from .vector_store import doc_type_variants
+
         if not filters:
             return True
         for key in ("company", "doc_type", "fiscal_period", "doc_name"):
@@ -68,10 +72,12 @@ class BM25Store:
             if want is None:
                 continue
             got = str(row.get(key, ""))
-            if isinstance(want, (list, tuple, set)):
-                if got not in {str(w) for w in want}:
+            wanted = {str(w) for w in want} if isinstance(want, (list, tuple, set)) else {str(want)}
+            if key == "doc_type":
+                accepted = {v for w in wanted for v in doc_type_variants(w)}
+                if got not in accepted:
                     return False
-            elif got != str(want):
+            elif got not in wanted:
                 return False
         return True
 

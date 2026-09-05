@@ -1,0 +1,10 @@
+{
+  "case_id": "rev_dcaedffb7c",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "edited",
+  "reviewer_notes": "Replaced the adequacy judgement with what the filing actually discloses.",
+  "reason_escalated": "The question asks for a conclusion on whether 3M's litigation reserves are adequate to cover its exposure. No retrieved passage contains such a judgement \u2014 3M explicitly states it cannot estimate a possible loss or range of loss for Combat Arms earplugs litigation beyond its $1.0\u20131.2B bankruptcy funding commitment [E1][E2][E5], and does not characterize its PFAS/AFFF accruals as sufficient or adequate anywhere in the sections retrieved. Adequacy is an evaluative judgement about future outcomes (litigation risk, settlement size, PFAS liability scope) that the filings do not make and that I should not manufacture. Requesting review to confirm whether the memo should (a) omit an adequacy conclusion and instead state the disclosed facts and disclaimers, or (b) have a human analyst supply an independent adequacy assessment outside the filings.",
+  "expect": {}
+}

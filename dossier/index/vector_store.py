@@ -24,6 +24,25 @@ def _sql_escape(value: str) -> str:
     return value.replace("'", "''")
 
 
+def doc_type_variants(value: str) -> list[str]:
+    """Every spelling of a document type that might be in the corpus.
+
+    The corpus stores FinanceBench's own labels -- `10k`, `10q`, `8k`, `Earnings` -- while
+    every human and every model writes `10-K`. An exact-match filter on `10-K` therefore
+    matched nothing and the search returned no passages, which the agent then correctly
+    reported as "not found in the indexed filings": a *false abstention* with no error
+    anywhere. Matching across spellings is the fix; the tool schema now also states the
+    real values.
+    """
+    raw = str(value or "").strip()
+    core = raw.replace("-", "").replace("_", "").replace(" ", "")
+    seen: list[str] = []
+    for candidate in (raw, core, core.lower(), core.upper(), core.capitalize(), raw.lower(), raw.upper()):
+        if candidate and candidate not in seen:
+            seen.append(candidate)
+    return seen
+
+
 def build_filter(filters: dict[str, Any] | None) -> str | None:
     if not filters:
         return None
@@ -32,13 +51,18 @@ def build_filter(filters: dict[str, Any] | None) -> str | None:
         val = filters.get(key)
         if val is None:
             continue
-        if isinstance(val, (list, tuple, set)):
-            if not val:
-                continue
-            joined = ", ".join(f"'{_sql_escape(str(v))}'" for v in val)
-            clauses.append(f"{key} IN ({joined})")
-        else:
-            clauses.append(f"{key} = '{_sql_escape(str(val))}'")
+        values = list(val) if isinstance(val, (list, tuple, set)) else [val]
+        if not values:
+            continue
+        if key == "doc_type":
+            expanded: list[str] = []
+            for v in values:
+                for variant in doc_type_variants(v):
+                    if variant not in expanded:
+                        expanded.append(variant)
+            values = expanded
+        joined = ", ".join(f"'{_sql_escape(str(v))}'" for v in values)
+        clauses.append(f"{key} IN ({joined})" if len(values) > 1 else f"{key} = {joined}")
     return " AND ".join(clauses) if clauses else None
 
 

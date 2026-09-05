@@ -1,0 +1,12 @@
+{
+  "case_id": "rev_5064b77670",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "rejected",
+  "reviewer_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop.",
+  "reason_escalated": "The draft below is asked to conclude whether 3M's litigation reserves are adequate to cover its exposure. No 10-K/10-Q passage retrieved states such a conclusion \u2014 the filings only disclose accrual amounts, state that liability beyond accruals is \"not probable and reasonably estimable,\" and explicitly say the company \"is not able to estimate a possible loss or range of possible loss\" in excess of established accruals [E4][E8]. Adequacy is a forward-looking judgement about uncertain mass-tort and environmental outcomes (Combat Arms earplugs litigation carries no recorded liability beyond the ~$1.0-1.2B funding commitment [E1][E2][E5][E6]; PFAS accrual was increased from $592M to $10.9B within six months in 2023 [E8][E4], itself evidence of how fast estimates can move). I cannot ground an adequacy conclusion and am escalating rather than asserting one.",
+  "expect": {
+    "must_address_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop."
+  }
+}

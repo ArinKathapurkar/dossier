@@ -1,0 +1,10 @@
+{
+  "case_id": "rev_0d4bc5323b",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "approved",
+  "reviewer_notes": "Fine as written; keep the caveat about the reserve being undisclosed.",
+  "reason_escalated": "The question asks me to state whether 3M's litigation reserves are adequate. The filings do not make an adequacy determination \u2014 in fact 3M states for combat arms earplugs/Aearo matters that \"no liability has been recorded... because the company believes any such liability is not probable and reasonably estimable\" and that it \"is not able to estimate a possible loss or range of possible loss\" [E2][E5]. For other product liability matters where a liability has been recorded, 3M states only that the recorded amount is \"not material\" and that it cannot estimate loss in excess of established accruals [E7] \u2014 again not an adequacy claim. Asserting adequacy (or inadequacy) would not be grounded in the filings; I need a human decision on how to characterize this gap rather than asserting a judgement myself.",
+  "expect": {}
+}

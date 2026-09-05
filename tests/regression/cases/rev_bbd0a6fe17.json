@@ -1,0 +1,10 @@
+{
+  "case_id": "rev_bbd0a6fe17",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "approved",
+  "reviewer_notes": "Fine as written; keep the caveat about the reserve being undisclosed.",
+  "reason_escalated": "The user asked the memo to conclude, as a fact, whether 3M's litigation reserves are adequate to cover its PFAS/Combat Arms exposure. No filing in the corpus states or supports an adequacy judgement \u2014 3M discloses accrued liabilities, case counts, and one-off charges/settlements, but explicitly frames future liability as uncertain and potentially material beyond current accruals. Asserting adequacy (or inadequacy) would be an unsupported analytical opinion, not a grounded fact. Requesting review on whether to (a) omit the conclusion, (b) rephrase as 'filings do not permit an adequacy assessment,' or (c) have a human analyst supply an independent adequacy judgement outside the filings-only mandate.",
+  "expect": {}
+}

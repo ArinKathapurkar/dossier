@@ -1,0 +1,12 @@
+{
+  "case_id": "rev_ef7506651e",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "rejected",
+  "reviewer_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop.",
+  "reason_escalated": "The question asks whether 3M's litigation reserves are adequate. The filings disclose accrual amounts and management's estimate of \"probable loss\" but explicitly state the company cannot estimate a possible loss or range of loss beyond established accruals (e.g., Combat Arms earplugs liability considered not probable/reasonably estimable and unrecorded except for the ~$1.0-1.2B bankruptcy funding commitment [E1][E2][E6]; PFAS environmental accrual jumped from $592M at YE2022 [E8] to $10.9B at June 30 2023 after a $10.3B charge [E3]). Filings do not contain, and by their own terms cannot support, a forward-looking adequacy judgement \u2014 that determination requires actuarial/legal judgement outside the indexed disclosures. Requesting human sign-off before any adequacy statement is included in the memo.",
+  "expect": {
+    "must_address_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop."
+  }
+}

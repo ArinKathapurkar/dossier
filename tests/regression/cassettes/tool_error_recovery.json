@@ -1,6 +1,6 @@
 {
   "entries": {
-    "46acc68e167fa4f469a4fa96": {
+    "73fba9a6e7382d8ba00e5bca": {
       "request": {
         "messages": [
           {
@@ -13,7 +13,7 @@
                 "caller": {
                   "type": "direct"
                 },
-                "id": "toolu_01NWESvj1vx3Hmq3J1uG9fiL",
+                "id": "toolu_01ALGDx6BKC5LhJEufsgXJsa",
                 "input": {
                   "company": "3M",
                   "concepts": [
@@ -35,7 +35,7 @@
             "content": [
               {
                 "content": "XBRL facts (source: SEC companyfacts):\n[F1] 3M RevenueFromContractWithCustomerExcludingAssessedTax = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04.\n[F2] 3M Revenues = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04.",
-                "tool_use_id": "toolu_01NWESvj1vx3Hmq3J1uG9fiL",
+                "tool_use_id": "toolu_01ALGDx6BKC5LhJEufsgXJsa",
                 "type": "tool_result"
               }
             ],
@@ -54,11 +54,17 @@
                   "type": "string"
                 },
                 "doc_type": {
-                  "description": "e.g. 10K, 10Q, 8K, EARNINGS.",
+                  "description": "Document type as stored in this corpus. Spelling variants such as '10-K' are accepted.",
+                  "enum": [
+                    "10k",
+                    "10q",
+                    "8k",
+                    "Earnings"
+                  ],
                   "type": "string"
                 },
                 "fiscal_period": {
-                  "description": "Fiscal year, e.g. 2022.",
+                  "description": "Fiscal year as a four-digit string, e.g. '2022'.",
                   "type": "string"
                 },
                 "k": {
@@ -233,16 +239,16 @@
         "_fell_back": false,
         "content": [
           {
-            "text": "The concept 'TotalMagicRevenue' does not exist in the us-gaap taxonomy or in 3M's filings \u2014 it's not a valid XBRL tag. The correct revenue concept is `RevenueFromContractWithCustomerExcludingAssessedTax` (equivalently reported as `Revenues`).",
+            "text": "The concept 'TotalMagicRevenue' does not exist in the us-gaap taxonomy/corpus for 3M \u2014 no such fact was returned.",
             "type": "text"
           },
           {
             "caller": {
               "type": "direct"
             },
-            "id": "toolu_019rUVgrtQvGQULY95KSv8Jt",
+            "id": "toolu_01Dzzgf2z9p14kuVgrtqAgHd",
             "input": {
-              "answer_markdown": "The concept `TotalMagicRevenue` does not exist \u2014 it is not a recognized us-gaap XBRL tag and returns no data for 3M or any company in this corpus.\n\nThe correct revenue concept for 3M is `RevenueFromContractWithCustomerExcludingAssessedTax` (also reported under `Revenues`):\n\n- **3M FY2018 Revenue: $32,765,000,000** \u2014 per 10-K filed 2021-02-04 [F1][F2]",
+              "answer_markdown": "The concept **'TotalMagicRevenue'** does not exist in the XBRL data \u2014 it is not a recognized us-gaap tag and no such fact is present for 3M.\n\nUsing the correct revenue concept instead: 3M's revenue for FY2018 was **$32,765,000,000** (reported both as `RevenueFromContractWithCustomerExcludingAssessedTax` and `Revenues`), per the 10-K filed 2021-02-04 [F1][F2].",
               "evidence_ids": [
                 "F1",
                 "F2"
@@ -252,7 +258,7 @@
             "type": "tool_use"
           }
         ],
-        "id": "msg_011CekpzvBSuMhkV5Y4uLn5H",
+        "id": "msg_011CekuKfuCAojUonRaau6gv",
         "model": "claude-sonnet-5",
         "role": "assistant",
         "stop_reason": "tool_use",
@@ -265,8 +271,8 @@
           "cache_creation_input_tokens": 0,
           "cache_read_input_tokens": 0,
           "inference_geo": "global",
-          "input_tokens": 3818,
-          "output_tokens": 343,
+          "input_tokens": 3856,
+          "output_tokens": 289,
           "output_tokens_details": {
             "thinking_tokens": 0
           },
@@ -274,7 +280,7 @@
         }
       }
     },
-    "c81416c36a08cb955c62f36e": {
+    "a5108eac394c2aaf1a920b09": {
       "request": {
         "messages": [
           {
@@ -294,11 +300,17 @@
                   "type": "string"
                 },
                 "doc_type": {
-                  "description": "e.g. 10K, 10Q, 8K, EARNINGS.",
+                  "description": "Document type as stored in this corpus. Spelling variants such as '10-K' are accepted.",
+                  "enum": [
+                    "10k",
+                    "10q",
+                    "8k",
+                    "Earnings"
+                  ],
                   "type": "string"
                 },
                 "fiscal_period": {
-                  "description": "Fiscal year, e.g. 2022.",
+                  "description": "Fiscal year as a four-digit string, e.g. '2022'.",
                   "type": "string"
                 },
                 "k": {
@@ -476,7 +488,7 @@
             "caller": {
               "type": "direct"
             },
-            "id": "toolu_01NWESvj1vx3Hmq3J1uG9fiL",
+            "id": "toolu_01ALGDx6BKC5LhJEufsgXJsa",
             "input": {
               "company": "3M",
               "concepts": [
@@ -492,7 +504,7 @@
             "type": "tool_use"
           }
         ],
-        "id": "msg_011Cekpzn4HW7cSUGs2VafZj",
+        "id": "msg_011CekuKXyCVCeyzQSaWh4Jg",
         "model": "claude-sonnet-5",
         "role": "assistant",
         "stop_reason": "tool_use",
@@ -505,8 +517,8 @@
           "cache_creation_input_tokens": 0,
           "cache_read_input_tokens": 0,
           "inference_geo": "global",
-          "input_tokens": 3262,
-          "output_tokens": 143,
+          "input_tokens": 3300,
+          "output_tokens": 145,
           "output_tokens_details": {
             "thinking_tokens": 0
           },
@@ -516,7 +528,7 @@
     }
   },
   "meta": {
-    "cost_usd_when_recorded": 0.01902,
+    "cost_usd_when_recorded": 0.018652,
     "expect": {
       "escalated": false,
       "final_state": "FINAL",
@@ -536,12 +548,63 @@
     },
     "fallback_model": "claude-haiku-4-5",
     "primary_model": "claude-sonnet-5",
-    "recorded_at": "2026-09-05T19:16:00Z",
-    "run_id": "run_3748b0b17eb6",
+    "recorded_at": "2026-09-05T20:12:41Z",
+    "run_id": "run_0da8acd37644",
     "scenario": "tool_error_recovery"
   },
   "order": [
-    "c81416c36a08cb955c62f36e",
-    "46acc68e167fa4f469a4fa96"
-  ]
+    "a5108eac394c2aaf1a920b09",
+    "73fba9a6e7382d8ba00e5bca"
+  ],
+  "tools": {
+    "get_financials:d369c904a88d8d9c:0": {
+      "ledger_adds": [
+        {
+          "citation": "3M XBRL companyfacts RevenueFromContractWithCustomerExcludingAssessedTax FY2018 (10-K filed 2021-02-04)",
+          "id": "F1",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "RevenueFromContractWithCustomerExcludingAssessedTax",
+            "filed": "2021-02-04",
+            "fiscal_year": 2018,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2020,
+            "period_days": 364,
+            "period_end": "2018-12-31",
+            "period_start": "2018-01-01",
+            "unit": "USD",
+            "value": 32765000000.0
+          },
+          "source_key": "fact:3M:RevenueFromContractWithCustomerExcludingAssessedTax:USD:2018-01-01:2018-12-31",
+          "text": "3M RevenueFromContractWithCustomerExcludingAssessedTax = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+        },
+        {
+          "citation": "3M XBRL companyfacts Revenues FY2018 (10-K filed 2021-02-04)",
+          "id": "F2",
+          "kind": "fact",
+          "meta": {
+            "cik": "CIK0000066740",
+            "company": "3M",
+            "concept": "Revenues",
+            "filed": "2021-02-04",
+            "fiscal_year": 2018,
+            "form": "10-K",
+            "fp": "FY",
+            "fy": 2020,
+            "period_days": 364,
+            "period_end": "2018-12-31",
+            "period_start": "2018-01-01",
+            "unit": "USD",
+            "value": 32765000000.0
+          },
+          "source_key": "fact:3M:Revenues:USD:2018-01-01:2018-12-31",
+          "text": "3M Revenues = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+        }
+      ],
+      "result": "XBRL facts (source: SEC companyfacts):\n[F1] 3M RevenueFromContractWithCustomerExcludingAssessedTax = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04.\n[F2] 3M Revenues = 32765000000.0 USD for fiscal year 2018 (2018-01-01 to 2018-12-31), per 10-K filed 2021-02-04."
+    }
+  }
 }

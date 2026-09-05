@@ -14,9 +14,10 @@
     },
     "fallback_model": "claude-haiku-4-5",
     "primary_model": "claude-sonnet-5",
-    "recorded_at": "2026-09-05T19:12:29Z",
-    "run_id": "run_80061acf5eae",
+    "recorded_at": "2026-09-05T20:07:41Z",
+    "run_id": "run_0801d7e98a18",
     "scenario": "input_guard_injection"
   },
-  "order": []
+  "order": [],
+  "tools": {}
 }

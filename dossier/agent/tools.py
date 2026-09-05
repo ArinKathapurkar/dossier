@@ -44,8 +44,12 @@ SEARCH_FILINGS = {
         "properties": {
             "query": {"type": "string", "description": "What to look for, in natural language."},
             "company": {"type": "string", "description": "Restrict to one company as named in the corpus."},
-            "doc_type": {"type": "string", "description": "e.g. 10K, 10Q, 8K, EARNINGS."},
-            "fiscal_period": {"type": "string", "description": "Fiscal year, e.g. 2022."},
+            "doc_type": {
+                "type": "string",
+                "enum": ["10k", "10q", "8k", "Earnings"],
+                "description": "Document type as stored in this corpus. Spelling variants such as '10-K' are accepted.",
+            },
+            "fiscal_period": {"type": "string", "description": "Fiscal year as a four-digit string, e.g. '2022'."},
             "k": {"type": "integer", "description": "How many passages to return (default 8, max 15)."},
         },
         "required": ["query"],
@@ -402,7 +406,12 @@ def handle_compare_peers(args: dict, ctx: ToolContext) -> str:
 
 def handle_compute(args: dict, ctx: ToolContext) -> str:
     expression = args["expression"]
-    inputs = dict(args.get("inputs") or {})
+    # Sorted, not insertion-ordered. The binding order arrives as JSON object key order from
+    # the model, which is incidental -- and it leaked into the computed value's citation text
+    # and its recorded input list, so two identical requests could produce different
+    # provenance strings. Caught by a cassette replay; a run's evidence text must not depend
+    # on how a JSON object happened to be serialised.
+    inputs = dict(sorted((args.get("inputs") or {}).items()))
     variables: dict[str, float] = {}
     used_ids: list[str] = []
     for name, eid in inputs.items():
@@ -426,8 +435,16 @@ def handle_compute(args: dict, ctx: ToolContext) -> str:
         result = safe_eval(expression, variables)
     except Exception as exc:
         return f"compute failed: {exc}"
-    item = ctx.ledger.add_computed(expression, round(float(result), 6), used_ids, detail=", ".join(f"{k}={v}" for k, v in variables.items()))
-    return f"[{item.id}] {item.text}\nCite this value as [{item.id}]; it carries its inputs {used_ids}."
+    # The input list is reported sorted by evidence id, so "derives from [F1, F2]" reads the
+    # same regardless of which order the model bound the names in.
+    ordered_ids = sorted(set(used_ids), key=lambda i: (i[0], int(i[1:])))
+    item = ctx.ledger.add_computed(
+        expression,
+        round(float(result), 6),
+        ordered_ids,
+        detail=", ".join(f"{k}={v}" for k, v in variables.items()),
+    )
+    return f"[{item.id}] {item.text}\nCite this value as [{item.id}]; it derives from {ordered_ids}."
 
 
 def handle_request_human_review(args: dict, ctx: ToolContext) -> str:
@@ -527,6 +544,15 @@ def dispatch(name: str, args: dict, ctx: ToolContext) -> str:
             _restore_ledger_items(ctx.ledger, recorded["ledger_adds"])
             if name == "search_filings":
                 ctx.searches += 1
+                # Emit the retrieval span the live handler would have, so a replayed run's
+                # trace has the same shape as the recorded one rather than a hole where the
+                # retriever used to be.
+                get_tracer().event(
+                    "retrieval",
+                    "search_filings",
+                    attrs={"query": str(args.get("query", ""))[:120], "replayed": True,
+                           "hits": len(recorded["ledger_adds"])},
+                )
             span.attrs.update({"replayed": True, "result_chars": len(recorded["result"])})
             return recorded["result"]
         try:

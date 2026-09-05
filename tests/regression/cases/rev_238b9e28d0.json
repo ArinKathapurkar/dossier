@@ -1,0 +1,10 @@
+{
+  "case_id": "rev_238b9e28d0",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "approved",
+  "reviewer_notes": "Fine as written; keep the caveat about the reserve being undisclosed.",
+  "reason_escalated": "The user asked for a judgement on whether 3M's litigation reserves are adequate. The filings disclose reserve balances and repeatedly state that for many matters (combat arms earplugs litigation itself, various environmental/other litigation) \"no liability has been recorded\" because the company believes a loss is \"not probable and reasonably estimable\" [E1][E2][E3][E5] \u2014 and separately disclose a $10.9B PFAS-related environmental accrual [E5] and a $1.0-1.2B Aearo funding commitment accrual [E1][E3]. Nowhere do the filings state, or allow a reader to derive, whether these accruals are adequate to cover eventual liability \u2014 by definition the unaccrued matters are ones 3M says it cannot yet estimate. Asserting adequacy (or inadequacy) would go beyond what is grounded in the evidence.",
+  "expect": {}
+}

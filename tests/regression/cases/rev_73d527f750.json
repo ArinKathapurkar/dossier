@@ -1,0 +1,12 @@
+{
+  "case_id": "rev_73d527f750",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "rejected",
+  "reviewer_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop.",
+  "reason_escalated": "The question asks whether 3M's litigation reserves (combat arms earplugs, PFAS, respirator/asbestos) are adequate. The filings explicitly state the company cannot estimate a possible loss or range of loss beyond established accruals for combat arms earplugs litigation [E2][E6][E8], and describe a $1.0-1.2B funding commitment and related accrued liabilities [E1][E2][E4] without characterizing those reserves as adequate or sufficient. No passage in the corpus contains an adequacy judgement \u2014 this is a legal/accounting sufficiency determination the filings do not make, and asserting one would not be grounded. Requesting human sign-off on how to phrase this gap in the memo.",
+  "expect": {
+    "must_address_notes": "Do not characterise reserve adequacy at all. Say what is disclosed and stop."
+  }
+}

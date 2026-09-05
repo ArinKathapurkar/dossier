@@ -1,0 +1,10 @@
+{
+  "case_id": "rev_b3d6a16e86",
+  "source": "reviewer_decision",
+  "question": "Assess 3M's litigation reserve adequacy.",
+  "section": "Key Risks",
+  "decision": "approved",
+  "reviewer_notes": "Fine as written; keep the caveat about the reserve being undisclosed.",
+  "reason_escalated": "The question asks whether 3M's litigation reserves are adequate. The filings disclose accrual amounts (e.g., ~$1.0B Combat Arms/Aearo funding commitment [E1], $1.2B pre-tax charge for respirator/asbestos and Combat Arms matters [E5], $897M Minnesota PFAS settlement charge [E4]) and repeatedly state the company \"is not able to estimate a possible loss or range of possible loss\" beyond recorded accruals for several matters, including PFAS/AFFF litigation [E1][E4]. Nowhere does 3M, its auditors, or any cited passage assert that reserves are 'adequate' \u2014 that is a forward-looking/judgmental conclusion the filings do not make, given open-ended PFAS and Combat Arms exposure. Asserting adequacy or inadequacy would not be grounded in the evidence. Requesting human sign-off on how to phrase this limitation in the memo.",
+  "expect": {}
+}
