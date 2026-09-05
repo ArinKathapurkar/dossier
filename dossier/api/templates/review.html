@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dossier — review queue</title>
+<style>
+  :root {
+    --bg: #fbfaf8; --panel: #ffffff; --ink: #1b1a18; --muted: #6b6862;
+    --line: #e3ded6; --accent: #7a4a1e; --bad: #9d2f2f; --good: #2f6b3f;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#141312; --panel:#1d1c1a; --ink:#eae7e1; --muted:#9a958c;
+            --line:#312e2a; --accent:#d9a066; --bad:#e07a7a; --good:#7fbf8f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:15px/1.55 ui-sans-serif,-apple-system,"Segoe UI",system-ui,sans-serif; }
+  header { padding:22px 28px; border-bottom:1px solid var(--line); }
+  h1 { margin:0 0 4px; font-size:19px; letter-spacing:-0.01em; }
+  .sub { color:var(--muted); font-size:13px; }
+  main { padding:20px 28px 60px; max-width:1180px; }
+  .review { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+            margin-bottom:22px; overflow:hidden; }
+  .head { padding:14px 18px; border-bottom:1px solid var(--line);
+          display:flex; gap:14px; align-items:baseline; flex-wrap:wrap; }
+  .section-name { font-weight:650; }
+  .id { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; color:var(--muted); }
+  .reason { padding:12px 18px; background:color-mix(in srgb, var(--bad) 8%, transparent);
+            border-bottom:1px solid var(--line); font-size:14px; }
+  .cols { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  @media (max-width: 860px) { .cols { grid-template-columns:1fr; } }
+  .col { padding:16px 18px; }
+  .col + .col { border-left:1px solid var(--line); }
+  @media (max-width: 860px) { .col + .col { border-left:none; border-top:1px solid var(--line); } }
+  h3 { margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); }
+  pre.draft { white-space:pre-wrap; word-wrap:break-word; margin:0; font:14px/1.6 inherit; }
+  ul.violations { margin:0; padding-left:18px; }
+  ul.violations li { margin-bottom:8px; }
+  .kind { color:var(--bad); font-weight:600; }
+  .ev { border-top:1px dashed var(--line); padding:9px 0; }
+  .ev:first-child { border-top:none; }
+  .ev .cite { font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--accent); }
+  .ev .txt { font-size:13px; color:var(--muted); }
+  .actions { padding:14px 18px; border-top:1px solid var(--line);
+             display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap; }
+  textarea, input[type=text] { width:100%; background:var(--bg); color:var(--ink);
+             border:1px solid var(--line); border-radius:6px; padding:9px; font:13px/1.5 inherit; }
+  textarea { min-height:110px; font-family:ui-monospace,Menlo,monospace; }
+  .field { flex:1 1 320px; }
+  button { border:1px solid var(--line); background:var(--panel); color:var(--ink);
+           padding:8px 15px; border-radius:6px; cursor:pointer; font:inherit; font-size:13px; }
+  button.approve { border-color:var(--good); color:var(--good); }
+  button.reject { border-color:var(--bad); color:var(--bad); }
+  button:hover { background:color-mix(in srgb, var(--ink) 6%, transparent); }
+  .status { font-size:13px; color:var(--muted); padding:0 18px 14px; }
+  .empty { color:var(--muted); padding:40px 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>dossier — review queue</h1>
+  <div class="sub">
+    {{ count }} item{{ '' if count == 1 else 's' }} awaiting a decision.
+    Each run below is paused; a decision resumes it from persisted state.
+  </div>
+</header>
+<main>
+{% if not reviews %}
+  <p class="empty">Nothing pending. Sections reach this queue when the agent cannot ground a
+  claim, or when the output guard rejects a draft twice in a row.</p>
+{% endif %}
+{% for r in reviews %}
+  <article class="review" data-id="{{ r.id }}">
+    <div class="head">
+      <span class="section-name">{{ r.section }}</span>
+      <span class="id">{{ r.id }} · run {{ r.run_id }} · {{ r.status }}</span>
+    </div>
+    <div class="reason"><strong>Why this stopped:</strong> {{ r.reason }}</div>
+    <div class="cols">
+      <div class="col">
+        <h3>Draft</h3>
+        <pre class="draft">{{ r.draft }}</pre>
+      </div>
+      <div class="col">
+        <h3>Guard violations</h3>
+        {% if r.guard and r.guard.violations %}
+          <ul class="violations">
+          {% for v in r.guard.violations %}
+            <li><span class="kind">{{ v.kind }}</span> — {{ v.detail }}
+              {% if v.sentence %}<br><em>in:</em> “{{ v.sentence[:220] }}”{% endif %}</li>
+          {% endfor %}
+          </ul>
+        {% else %}
+          <p class="sub">No guard violations recorded; this was escalated by the agent itself.</p>
+        {% endif %}
+        <h3 style="margin-top:18px">Cited evidence</h3>
+        {% for e in r.evidence %}
+          <div class="ev">
+            <div class="cite">[{{ e.id }}] {{ e.citation }}</div>
+            <div class="txt">{{ e.excerpt }}</div>
+          </div>
+        {% else %}
+          <p class="sub">No evidence recorded on this run.</p>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="actions">
+      <div class="field">
+        <textarea placeholder="Edited text (leave blank to approve or reject as-is)"></textarea>
+      </div>
+      <div class="field">
+        <input type="text" placeholder="Reviewer notes — sent back to the model on reject">
+      </div>
+      <button class="approve" onclick="decide(this,'approved')">Approve</button>
+      <button onclick="decide(this,'edited')">Save edit</button>
+      <button class="reject" onclick="decide(this,'rejected')">Reject</button>
+    </div>
+    <div class="status"></div>
+  </article>
+{% endfor %}
+</main>
+<script>
+async function decide(btn, decision) {
+  const card = btn.closest('.review');
+  const id = card.dataset.id;
+  const edited = card.querySelector('textarea').value;
+  const notes = card.querySelector('input[type=text]').value;
+  const status = card.querySelector('.status');
+  status.textContent = 'Resuming the run…';
+  card.querySelectorAll('button').forEach(b => b.disabled = true);
+  try {
+    const res = await fetch(`/reviews/${id}/decision`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({decision, edited_text: edited || null, notes})
+    });
+    const data = await res.json();
+    status.textContent = res.ok
+      ? `${decision} — run ${data.run_id} is now ${data.state}.`
+      : `Error: ${data.detail || res.statusText}`;
+  } catch (err) {
+    status.textContent = 'Error: ' + err;
+  } finally {
+    card.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
+}
+</script>
+</body>
+</html>
