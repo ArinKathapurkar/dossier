@@ -12,12 +12,13 @@ jobs:
     # the regression cassettes are all offline and deterministic; if a test ever starts
     # reaching for the live API it must fail loudly here rather than quietly spend money.
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+          cache-dependency-glob: "pyproject.toml"
 
       - name: Set up Python 3.12
         run: uv python install 3.12

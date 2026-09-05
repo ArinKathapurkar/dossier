@@ -1,5 +1,7 @@
 # dossier
 
+[![ci](https://github.com/ArinKathapurkar/dossier/actions/workflows/ci.yml/badge.svg)](https://github.com/ArinKathapurkar/dossier/actions/workflows/ci.yml)
+
 An agentic due-diligence copilot over SEC filings. Given a target company and a peer set, it
 answers analyst questions and drafts a diligence memo where **every claim is tied to a cited
 filing passage or an XBRL fact**, and any section it cannot ground is routed to a human
