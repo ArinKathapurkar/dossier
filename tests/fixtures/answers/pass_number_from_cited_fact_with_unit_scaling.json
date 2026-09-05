@@ -1,0 +1,25 @@
+{
+  "name": "pass_number_from_cited_fact_with_unit_scaling",
+  "answer": "Operating cash flow was $6.439 billion in FY2018 [F1].",
+  "ledger": [
+    {
+      "id": "F1",
+      "kind": "fact",
+      "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2018 (10-K filed 2019-02-07)",
+      "text": "3M NetCashProvidedByUsedInOperatingActivities = 6439000000.0 USD for fiscal year 2018 FY ending 2018-12-31, per 10-K filed 2019-02-07.",
+      "meta": {
+        "value": 6439000000.0,
+        "unit": "USD",
+        "fy": 2018,
+        "concept": "NetCashProvidedByUsedInOperatingActivities",
+        "company": "3M"
+      }
+    }
+  ],
+  "evidence_ids": [
+    "F1"
+  ],
+  "expect_pass": true,
+  "expect_violations": [],
+  "why": "6.439 billion normalizes to the fact value 6,439,000,000 within tolerance."
+}

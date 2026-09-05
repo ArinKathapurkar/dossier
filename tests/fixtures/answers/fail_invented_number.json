@@ -1,0 +1,20 @@
+{
+  "name": "fail_invented_number",
+  "answer": "3M's FY2018 capital expenditure was $1,890 million [E1].",
+  "ledger": [
+    {
+      "id": "E1",
+      "kind": "chunk",
+      "citation": "3M 10K 2018, p.60",
+      "text": "Cash Flows from Investing Activities. Purchases of property, plant and equipment (PP&E) (1,577) (1,373) (1,420). Proceeds from sale of PP&E and other assets 262 49 58. Net cash provided by (used in) operating activities 6,439 6,240 6,662."
+    }
+  ],
+  "evidence_ids": [
+    "E1"
+  ],
+  "expect_pass": false,
+  "expect_violations": [
+    "numeric_ungrounded"
+  ],
+  "why": "1,890 appears nowhere in the cited passage. This is the exact failure the guard exists for."
+}

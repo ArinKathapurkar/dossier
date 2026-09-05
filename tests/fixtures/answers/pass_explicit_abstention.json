@@ -1,0 +1,9 @@
+{
+  "name": "pass_explicit_abstention",
+  "answer": "That figure is not found in the indexed filings. The corpus does not contain a fiscal 2024 filing for this company.",
+  "ledger": [],
+  "evidence_ids": [],
+  "expect_pass": true,
+  "expect_violations": [],
+  "why": "An answer with no evidence must be an explicit abstention -- and this one is."
+}

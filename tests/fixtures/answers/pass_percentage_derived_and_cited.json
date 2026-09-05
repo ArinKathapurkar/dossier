@@ -1,0 +1,54 @@
+{
+  "name": "pass_percentage_derived_and_cited",
+  "answer": "Capital expenditure equalled 24.5% of operating cash flow in FY2018 [F1][F2][C1].",
+  "ledger": [
+    {
+      "id": "F1",
+      "kind": "fact",
+      "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2018 (10-K filed 2019-02-07)",
+      "text": "3M NetCashProvidedByUsedInOperatingActivities = 6439000000.0 USD for fiscal year 2018 FY ending 2018-12-31, per 10-K filed 2019-02-07.",
+      "meta": {
+        "value": 6439000000.0,
+        "unit": "USD",
+        "fy": 2018,
+        "concept": "NetCashProvidedByUsedInOperatingActivities",
+        "company": "3M"
+      }
+    },
+    {
+      "id": "F2",
+      "kind": "fact",
+      "citation": "3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2018 (10-K filed 2019-02-07)",
+      "text": "3M PaymentsToAcquirePropertyPlantAndEquipment = 1577000000.0 USD for fiscal year 2018 FY ending 2018-12-31, per 10-K filed 2019-02-07.",
+      "meta": {
+        "value": 1577000000.0,
+        "unit": "USD",
+        "fy": 2018,
+        "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+        "company": "3M"
+      }
+    },
+    {
+      "id": "C1",
+      "kind": "computed",
+      "citation": "computed: ocf - capex from [F1, F2]",
+      "text": "capex / ocf * 100 = 24.49",
+      "meta": {
+        "expression": "capex / ocf * 100",
+        "value": 24.49,
+        "inputs": [
+          "F1",
+          "F2"
+        ]
+      }
+    }
+  ],
+  "evidence_ids": [
+    "F1",
+    "F2",
+    "C1"
+  ],
+  "expect_pass": true,
+  "expect_violations": [],
+  "why": "A percentage matching a computed value within the 0.5% tolerance."
+}

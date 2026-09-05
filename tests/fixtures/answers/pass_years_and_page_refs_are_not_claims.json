@@ -1,0 +1,18 @@
+{
+  "name": "pass_years_and_page_refs_are_not_claims",
+  "answer": "The FY2018 figure appears in Item 8 of the 2018 Form 10-K: capital expenditure of $1,577 million [E1].",
+  "ledger": [
+    {
+      "id": "E1",
+      "kind": "chunk",
+      "citation": "3M 10K 2018, p.60",
+      "text": "Cash Flows from Investing Activities. Purchases of property, plant and equipment (PP&E) (1,577) (1,373) (1,420). Proceeds from sale of PP&E and other assets 262 49 58. Net cash provided by (used in) operating activities 6,439 6,240 6,662."
+    }
+  ],
+  "evidence_ids": [
+    "E1"
+  ],
+  "expect_pass": true,
+  "expect_violations": [],
+  "why": "Guards against a known false-positive mode: fiscal years and item references are not financial claims."
+}

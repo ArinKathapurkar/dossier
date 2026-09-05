@@ -1,0 +1,20 @@
+{
+  "name": "fail_citation_does_not_resolve",
+  "answer": "Capital expenditure was $1,577 million [E9].",
+  "ledger": [
+    {
+      "id": "E1",
+      "kind": "chunk",
+      "citation": "3M 10K 2018, p.60",
+      "text": "Cash Flows from Investing Activities. Purchases of property, plant and equipment (PP&E) (1,577) (1,373) (1,420). Proceeds from sale of PP&E and other assets 262 49 58. Net cash provided by (used in) operating activities 6,439 6,240 6,662."
+    }
+  ],
+  "evidence_ids": [
+    "E9"
+  ],
+  "expect_pass": false,
+  "expect_violations": [
+    "citation_invalid"
+  ],
+  "why": "E9 is not in the ledger; a plausible-looking citation that resolves to nothing."
+}

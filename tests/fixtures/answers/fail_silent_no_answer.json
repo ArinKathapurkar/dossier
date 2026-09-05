@@ -1,0 +1,12 @@
+{
+  "name": "fail_silent_no_answer",
+  "answer": "3M is a diversified industrial manufacturer with roughly $32 billion in annual revenue.",
+  "ledger": [],
+  "evidence_ids": [],
+  "expect_pass": false,
+  "expect_violations": [
+    "abstention_shape",
+    "numeric_ungrounded"
+  ],
+  "why": "Answers from the model's own knowledge with no citation and no abstention statement."
+}

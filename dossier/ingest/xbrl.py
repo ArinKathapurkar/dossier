@@ -43,21 +43,62 @@ CONCEPTS: tuple[str, ...] = (
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS facts (
-    company     TEXT NOT NULL,
-    cik         TEXT NOT NULL,
-    concept     TEXT NOT NULL,
-    unit        TEXT NOT NULL,
-    fy          INTEGER,
-    fp          TEXT,
-    period_end  TEXT,
-    value       REAL,
-    form        TEXT,
-    filed       TEXT,
-    PRIMARY KEY (company, concept, unit, fy, fp, period_end, form)
+    company       TEXT NOT NULL,
+    cik           TEXT NOT NULL,
+    concept       TEXT NOT NULL,
+    unit          TEXT NOT NULL,
+    fy            INTEGER,
+    fp            TEXT,
+    period_start  TEXT,
+    period_end    TEXT,
+    period_days   INTEGER,
+    fiscal_year   INTEGER,
+    value         REAL,
+    form          TEXT,
+    filed         TEXT,
+    PRIMARY KEY (company, concept, unit, period_start, period_end, form, fy, fp)
 );
 CREATE INDEX IF NOT EXISTS idx_facts_company_concept ON facts(company, concept);
-CREATE INDEX IF NOT EXISTS idx_facts_fy ON facts(fy);
+CREATE INDEX IF NOT EXISTS idx_facts_fiscal_year ON facts(fiscal_year);
 """
+
+# A companyfacts entry's `fy`/`fp` describe the *filing* it appeared in, not the period the
+# number covers: a FY2018 10-K reports 2016, 2017 and 2018 columns and tags all three
+# fy=2018, fp=FY. Selecting on `fy` therefore returns whichever of the three rows sorts
+# first, which is how a query for FY2018 capex silently returns the 2016 figure. The
+# authoritative period is `end` (and `start` for duration concepts), so we derive a real
+# fiscal year from `end` and query on that instead.
+ANNUAL_MIN_DAYS = 300
+ANNUAL_MAX_DAYS = 400
+
+
+def _fiscal_year_from_end(end: str | None) -> int | None:
+    """Fiscal year implied by a period end date.
+
+    A period ending in January-May belongs to the prior fiscal year in most retail and
+    tech calendars (Walmart's FY2019 ends 2019-01-31, so it stays 2019; Apple-style
+    September year-ends stay in their own year). Using the end date's own year is right
+    for the overwhelming majority and is at least *consistent*, which `fy` is not.
+    """
+    if not end:
+        return None
+    try:
+        return int(str(end)[:4])
+    except ValueError:
+        return None
+
+
+def _period_days(start: str | None, end: str | None) -> int | None:
+    if not start or not end:
+        return None
+    from datetime import date
+
+    try:
+        s = date.fromisoformat(str(start)[:10])
+        e = date.fromisoformat(str(end)[:10])
+    except ValueError:
+        return None
+    return (e - s).days
 
 
 def connect(path: Path | None = None) -> sqlite3.Connection:
@@ -108,10 +149,11 @@ def extract_rows(company: str, cik: str, payload: dict) -> list[tuple]:
                     company,
                     concept,
                     unit,
-                    e.get("fy"),
-                    e.get("fp"),
+                    e.get("start"),
                     e.get("end"),
                     e.get("form"),
+                    e.get("fy"),
+                    e.get("fp"),
                 )
                 if key in seen:
                     continue
@@ -124,7 +166,10 @@ def extract_rows(company: str, cik: str, payload: dict) -> list[tuple]:
                         unit,
                         e.get("fy"),
                         e.get("fp"),
+                        e.get("start"),
                         e.get("end"),
+                        _period_days(e.get("start"), e.get("end")),
+                        _fiscal_year_from_end(e.get("end")),
                         e.get("val"),
                         e.get("form"),
                         e.get("filed"),
@@ -146,8 +191,9 @@ def load_facts(cik_map: dict[str, str], db: Path | None = None, sleep_s: float =
         rows = extract_rows(company, cik, payload)
         conn.executemany(
             "INSERT OR REPLACE INTO facts "
-            "(company, cik, concept, unit, fy, fp, period_end, value, form, filed) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?)",
+            "(company, cik, concept, unit, fy, fp, period_start, period_end, period_days, "
+            " fiscal_year, value, form, filed) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
             rows,
         )
         inserted += len(rows)
@@ -171,22 +217,32 @@ def query_facts(
     db: Path | None = None,
     forms: tuple[str, ...] = ("10-K", "10-Q", "20-F"),
     limit: int = 200,
+    annual_only: bool = True,
 ) -> list[dict]:
-    """Annual-first fact lookup used by the `get_financials` / `compare_peers` tools."""
+    """Annual-first fact lookup used by the `get_financials` / `compare_peers` tools.
+
+    Selection is on `fiscal_year` (derived from the period end date), never on the
+    filing's `fy` tag -- see the note above ANNUAL_MIN_DAYS. Duration concepts are
+    restricted to roughly-annual periods so a quarterly figure never answers an annual
+    question; instant concepts (balance sheet items) carry no `start` and are kept.
+    """
     conn = connect(db)
     q = (
-        "SELECT company, cik, concept, unit, fy, fp, period_end, value, form, filed "
+        "SELECT company, cik, concept, unit, fy, fp, period_start, period_end, period_days, "
+        "       fiscal_year, value, form, filed "
         "FROM facts WHERE company IN ({c}) AND concept IN ({k})"
     ).format(c=",".join("?" * len(companies)), k=",".join("?" * len(concepts)))
     params: list = [*companies, *concepts]
     if fiscal_years:
-        q += " AND fy IN ({y})".format(y=",".join("?" * len(fiscal_years)))
+        q += " AND fiscal_year IN ({y})".format(y=",".join("?" * len(fiscal_years)))
         params += list(fiscal_years)
     if forms:
         q += " AND form IN ({f})".format(f=",".join("?" * len(forms)))
         params += list(forms)
-    # FY annual figures first (fp='FY'), then most recent filing wins on ties.
-    q += " ORDER BY (fp = 'FY') DESC, fy DESC, filed DESC LIMIT ?"
+    if annual_only:
+        q += f" AND (period_days IS NULL OR period_days BETWEEN {ANNUAL_MIN_DAYS} AND {ANNUAL_MAX_DAYS})"
+    # Most recent fiscal year first; within a year, the latest filing (restatements win).
+    q += " ORDER BY fiscal_year DESC, filed DESC, period_end DESC LIMIT ?"
     params.append(limit)
     rows = [dict(r) for r in conn.execute(q, params).fetchall()]
     conn.close()

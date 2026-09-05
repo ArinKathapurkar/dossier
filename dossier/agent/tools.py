@@ -336,13 +336,14 @@ def _fact_rows(company: str, concepts: list[str], years: list[int] | None) -> li
     from ..ingest.xbrl import query_facts
 
     rows = query_facts([company], concepts, years)
-    # Keep the best row per (concept, fy): annual figures from the most recent filing.
+    # One row per (concept, fiscal_year): query_facts already orders latest-filing-first,
+    # so the first row for a key is the most recently filed (restated) value.
     best: dict[tuple[str, Any], dict] = {}
     for r in rows:
-        key = (r["concept"], r["fy"])
+        key = (r["concept"], r["fiscal_year"])
         if key not in best:
             best[key] = r
-    return sorted(best.values(), key=lambda r: (r["concept"], -(r["fy"] or 0)))
+    return sorted(best.values(), key=lambda r: (r["concept"], -(r["fiscal_year"] or 0)))
 
 
 def handle_get_financials(args: dict, ctx: ToolContext) -> str:

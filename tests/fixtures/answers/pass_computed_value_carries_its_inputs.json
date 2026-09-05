@@ -1,0 +1,54 @@
+{
+  "name": "pass_computed_value_carries_its_inputs",
+  "answer": "Free cash flow was $4,862 million in FY2018, computed as operating cash flow [F1] less capital expenditure [F2] [C1].",
+  "ledger": [
+    {
+      "id": "F1",
+      "kind": "fact",
+      "citation": "3M XBRL companyfacts NetCashProvidedByUsedInOperatingActivities FY2018 (10-K filed 2019-02-07)",
+      "text": "3M NetCashProvidedByUsedInOperatingActivities = 6439000000.0 USD for fiscal year 2018 FY ending 2018-12-31, per 10-K filed 2019-02-07.",
+      "meta": {
+        "value": 6439000000.0,
+        "unit": "USD",
+        "fy": 2018,
+        "concept": "NetCashProvidedByUsedInOperatingActivities",
+        "company": "3M"
+      }
+    },
+    {
+      "id": "F2",
+      "kind": "fact",
+      "citation": "3M XBRL companyfacts PaymentsToAcquirePropertyPlantAndEquipment FY2018 (10-K filed 2019-02-07)",
+      "text": "3M PaymentsToAcquirePropertyPlantAndEquipment = 1577000000.0 USD for fiscal year 2018 FY ending 2018-12-31, per 10-K filed 2019-02-07.",
+      "meta": {
+        "value": 1577000000.0,
+        "unit": "USD",
+        "fy": 2018,
+        "concept": "PaymentsToAcquirePropertyPlantAndEquipment",
+        "company": "3M"
+      }
+    },
+    {
+      "id": "C1",
+      "kind": "computed",
+      "citation": "computed: ocf - capex from [F1, F2]",
+      "text": "ocf - capex = 4862000000.0 (ocf=6439000000.0, capex=1577000000.0)",
+      "meta": {
+        "expression": "ocf - capex",
+        "value": 4862000000.0,
+        "inputs": [
+          "F1",
+          "F2"
+        ]
+      }
+    }
+  ],
+  "evidence_ids": [
+    "F1",
+    "F2",
+    "C1"
+  ],
+  "expect_pass": true,
+  "expect_violations": [],
+  "why": "The derived figure is a C# value whose inputs are themselves cited."
+}

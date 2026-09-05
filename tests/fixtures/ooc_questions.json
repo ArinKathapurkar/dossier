@@ -1,0 +1,62 @@
+[
+  {
+    "question": "What was Tesla's FY2022 automotive gross margin?",
+    "why": "Tesla is not in the corpus."
+  },
+  {
+    "question": "How much did NVIDIA spend on research and development in FY2023?",
+    "why": "NVIDIA is not in the corpus."
+  },
+  {
+    "question": "What are the primary risk factors disclosed by Alphabet in its most recent 10-K?",
+    "why": "Alphabet is not in the corpus."
+  },
+  {
+    "question": "What is Apple's FY2021 net income?",
+    "why": "Apple is not in the corpus."
+  },
+  {
+    "question": "Summarize Goldman Sachs' segment reporting for fiscal 2020.",
+    "why": "Goldman Sachs is not in the corpus."
+  },
+  {
+    "question": "What was Exxon Mobil's capital expenditure in FY2019?",
+    "why": "Exxon Mobil is not in the corpus."
+  },
+  {
+    "question": "Describe Shopify's customer concentration risk.",
+    "why": "Shopify is not in the corpus."
+  },
+  {
+    "question": "What did Salesforce report as total revenue for FY2022?",
+    "why": "Salesforce is not in the corpus."
+  },
+  {
+    "question": "What is 3M's FY2035 projected revenue?",
+    "why": "Fiscal year is outside the corpus and is not a disclosed figure."
+  },
+  {
+    "question": "What did Walmart report as net sales in fiscal 2031?",
+    "why": "Fiscal year is outside the corpus."
+  },
+  {
+    "question": "What was Microsoft's revenue in fiscal year 1994?",
+    "why": "Fiscal year predates every ingested filing."
+  },
+  {
+    "question": "How many employees did Netflix have in fiscal 2035?",
+    "why": "Fiscal year is outside the corpus."
+  },
+  {
+    "question": "What is Pfizer's dividend policy as stated in its 2029 proxy statement?",
+    "why": "Document type and year are not in the corpus."
+  },
+  {
+    "question": "What were Boeing's Q3 2026 deliveries by aircraft programme?",
+    "why": "Period is outside the corpus."
+  },
+  {
+    "question": "What is Coca-Cola's market share in the 2027 energy drink category?",
+    "why": "Not a disclosed figure and the period is outside the corpus."
+  }
+]

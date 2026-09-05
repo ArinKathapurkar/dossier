@@ -1,0 +1,18 @@
+{
+  "name": "pass_attributed_forward_looking",
+  "answer": "Management expects continued investment in growth programs during 2019 [E2].",
+  "ledger": [
+    {
+      "id": "E2",
+      "kind": "chunk",
+      "citation": "3M 10K 2018, p.14",
+      "text": "The Company operates in four business segments: Industrial; Safety and Graphics; Health Care; and Electronics and Energy. Management expects continued investment in growth programs during 2019."
+    }
+  ],
+  "evidence_ids": [
+    "E2"
+  ],
+  "expect_pass": true,
+  "expect_violations": [],
+  "why": "Forward-looking language is attributed to management and carries a citation."
+}

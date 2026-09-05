@@ -110,14 +110,16 @@ class Ledger:
         )
 
     def add_fact(self, row: dict) -> EvidenceItem:
-        period = row.get("fy") or (row.get("period_end") or "")
+        # The fiscal year shown is the one derived from the period end date, not the
+        # filing's `fy` tag -- see ingest/xbrl.py for why those differ.
+        period = row.get("fiscal_year") or row.get("fy") or (row.get("period_end") or "")
         citation = f"{row.get('company', '')} XBRL companyfacts {row.get('concept', '')} FY{period} ({row.get('form', '')} filed {row.get('filed', '')})"
+        span = f"{row.get('period_start')} to {row.get('period_end')}" if row.get("period_start") else f"as of {row.get('period_end')}"
         text = (
             f"{row.get('company', '')} {row.get('concept', '')} = {row.get('value')} {row.get('unit', '')} "
-            f"for fiscal year {row.get('fy')} {row.get('fp', '')} ending {row.get('period_end')}, "
-            f"per {row.get('form', '')} filed {row.get('filed', '')}."
+            f"for fiscal year {period} ({span}), per {row.get('form', '')} filed {row.get('filed', '')}."
         )
-        key = f"fact:{row.get('company')}:{row.get('concept')}:{row.get('unit')}:{row.get('fy')}:{row.get('fp')}:{row.get('period_end')}"
+        key = f"fact:{row.get('company')}:{row.get('concept')}:{row.get('unit')}:{row.get('period_start')}:{row.get('period_end')}"
         return self._add("F", "fact", citation, text, source_key=key, meta=dict(row))
 
     def add_computed(self, expression: str, value: Any, input_ids: list[str], detail: str = "") -> EvidenceItem:
