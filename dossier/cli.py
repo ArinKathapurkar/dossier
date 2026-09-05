@@ -61,12 +61,13 @@ def ingest(
 def index(
     graph: str = typer.Option("networkx", help="Graph backend: networkx | neo4j."),
     skip_graph: bool = typer.Option(False, help="Skip entity extraction (which costs API tokens)."),
+    skip_vectors: bool = typer.Option(False, help="Reuse the existing vector and BM25 indexes."),
     limit_docs: int = typer.Option(0, help="Only extract entities from the first N documents."),
 ) -> None:
     """Build the vector index, the BM25 index, and the entity graph."""
     from .index.pipeline import run_index
 
-    rep = run_index(graph_backend=graph, skip_graph=skip_graph, limit_docs=limit_docs or None)
+    rep = run_index(graph_backend=graph, skip_graph=skip_graph, skip_vectors=skip_vectors, limit_docs=limit_docs or None)
     g = rep.get("graph", {})
     console.print(
         f"[bold green]index[/] vectors {rep['vectors']} ({rep['vector_index_type']}) · "

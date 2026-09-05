@@ -80,7 +80,7 @@ class Embedder:
         self.model_name = model_name or cfg.embed_model
         requested = device or pick_device()
         self.parity = mps_parity_check(
-            ["dossier embedding parity probe sentence number %d about revenue and cash flow." % i for i in range(32)]
+            [f"dossier embedding parity probe sentence number {i} about revenue and cash flow." for i in range(32)]
         )
         if requested == "mps" and self.parity.get("ran") and not self.parity.get("ok"):
             requested = "cpu"

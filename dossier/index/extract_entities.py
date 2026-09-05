@@ -17,6 +17,7 @@ what it cost to build.
 
 from __future__ import annotations
 
+import concurrent.futures
 import json
 import re
 import time
@@ -143,16 +144,47 @@ def extract_page(text: str, model: str | None = None) -> tuple[dict, float, int,
     return payload, resp.cost_usd, resp.tokens_in, resp.tokens_out
 
 
+def _as_entities(raw) -> list[dict]:
+    """Tolerate the model returning a bare string where the schema asks for an object.
+
+    Forced tool use makes this rare but not impossible, and one malformed page must not
+    abort an 84-document extraction that has already been paid for.
+    """
+    out = []
+    for e in raw or []:
+        if isinstance(e, str):
+            if e.strip():
+                out.append({"name": e.strip(), "type": ""})
+        elif isinstance(e, dict) and e.get("name"):
+            out.append({"name": str(e["name"]), "type": str(e.get("type") or "")})
+    return out
+
+
+def _as_relations(raw) -> list[dict]:
+    out = []
+    for r in raw or []:
+        if not isinstance(r, dict):
+            continue
+        if r.get("src") and r.get("dst") and r.get("rel"):
+            out.append({"src": str(r["src"]), "rel": str(r["rel"]), "dst": str(r["dst"])})
+    return out
+
+
 def build_graph(
     store: GraphStore,
     pages_by_doc: dict[str, dict[int, str]],
     doc_meta: dict[str, dict],
     chunks_by_doc_page: dict[tuple[str, int], list[str]],
     limit_docs: int | None = None,
-    max_pages_per_doc: int = 25,
+    max_pages_per_doc: int = 14,
     use_cache: bool = True,
+    workers: int = 8,
 ) -> dict:
-    """Extract over every document's narrative pages and upsert into the graph store."""
+    """Extract over every document's narrative pages and upsert into the graph store.
+
+    Pages are extracted concurrently (they are independent), but the *upsert* order is the
+    document/page order, so the resulting graph is identical regardless of scheduling.
+    """
     started = time.time()
     total_cost = 0.0
     calls = 0
@@ -167,37 +199,44 @@ def build_graph(
         dirty = False
         entities: list[Entity] = []
         relations: list[Relation] = []
+
+        todo = [p for p in targets if len((pages.get(p) or "").strip()) >= 400 and str(p) not in cache]
+        if todo:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=min(workers, len(todo))) as pool:
+                futures = {pool.submit(extract_page, pages[p]): p for p in todo}
+                for fut in concurrent.futures.as_completed(futures):
+                    page = futures[fut]
+                    try:
+                        payload, cost, tin, tout = fut.result()
+                    except Exception:
+                        # A single page failing must not abort a whole document.
+                        continue
+                    total_cost += cost
+                    tokens_in += tin
+                    tokens_out += tout
+                    calls += 1
+                    cache[str(page)] = payload
+                    dirty = True
+            if dirty:
+                # Persist as soon as the calls are paid for, so a later failure never
+                # forces a re-spend on pages already extracted.
+                save_cache(doc_name, cache)
+                dirty = False
+
         for page in targets:
             text = (pages.get(page) or "").strip()
             if len(text) < 400:
                 continue
             key = str(page)
-            if key in cache:
-                payload = cache[key]
-                cached_hits += 1
-            else:
-                try:
-                    payload, cost, tin, tout = extract_page(text)
-                except Exception:
-                    # A single page failing must not abort a 25-page document.
-                    continue
-                total_cost += cost
-                tokens_in += tin
-                tokens_out += tout
-                calls += 1
-                cache[key] = payload
-                dirty = True
+            if key not in cache:
+                continue
+            payload = cache[key]
+            cached_hits += 1
             provenance = chunks_by_doc_page.get((doc_name, page), [])
-            for e in payload.get("entities", []) or []:
-                if not e.get("name"):
-                    continue
+            for e in _as_entities(payload.get("entities")):
                 entities.append(Entity(name=e["name"], type=e.get("type", ""), chunk_ids=list(provenance)))
-            for r in payload.get("relations", []) or []:
-                if not (r.get("src") and r.get("dst") and r.get("rel")):
-                    continue
+            for r in _as_relations(payload.get("relations")):
                 relations.append(Relation(src=r["src"], rel=r["rel"], dst=r["dst"], chunk_ids=list(provenance)))
-        if dirty:
-            save_cache(doc_name, cache)
         if entities or relations:
             store.upsert(entities, relations)
     stats = store.stats()
@@ -205,7 +244,7 @@ def build_graph(
         **stats,
         "documents": len(docs),
         "llm_calls": calls,
-        "cached_pages": cached_hits,
+        "pages_upserted": cached_hits,
         "tokens_in": tokens_in,
         "tokens_out": tokens_out,
         "cost_usd": round(total_cost, 6),

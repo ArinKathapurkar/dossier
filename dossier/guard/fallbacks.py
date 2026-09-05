@@ -17,9 +17,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
-from typing import Any, TypeVar
-
-T = TypeVar("T")
+from typing import Any
 
 
 class FallbackTriggered(Exception):
@@ -36,7 +34,7 @@ def emit_fallback(span_name: str, frm: str, to: str, error: str | None = None, *
     )
 
 
-def with_fallback(
+def with_fallback[T](  # noqa: UP047 - explicit TypeVar kept for readability
     primary: Callable[[], T],
     fallback: Callable[[], T],
     span_name: str,

@@ -23,6 +23,7 @@ def load_chunks() -> list[dict]:
 def run_index(
     graph_backend: str = "networkx",
     skip_graph: bool = False,
+    skip_vectors: bool = False,
     limit_docs: int | None = None,
 ) -> dict[str, Any]:
     cfg = get_config()
@@ -31,25 +32,33 @@ def run_index(
     chunks = load_chunks()
     report: dict[str, Any] = {"chunks": len(chunks)}
 
-    # ---- vectors -----------------------------------------------------------------
-    from .embed import Embedder
+    if skip_vectors:
+        # Rebuilding the graph does not require re-encoding 32k chunks.
+        vs = VectorStore()
+        report.update(
+            {"device": "skipped", "mps_parity": {"ran": False}, "embed_s": 0.0,
+             "vectors": vs.count(), "vector_index_type": "unchanged", "bm25_docs": len(chunks), "bm25_s": 0.0}
+        )
+    else:
+        # ---- vectors -------------------------------------------------------------
+        from .embed import Embedder
 
-    embedder = Embedder()
-    report["device"] = embedder.device
-    report["mps_parity"] = embedder.parity
-    t0 = time.time()
-    vectors = embedder.encode_passages([c["text"] for c in chunks])
-    report["embed_s"] = round(time.time() - t0, 1)
-    vs = VectorStore()
-    build = vs.build(chunks, vectors)
-    report["vectors"] = build["rows"]
-    report["vector_index_type"] = build["index_type"]
+        embedder = Embedder()
+        report["device"] = embedder.device
+        report["mps_parity"] = embedder.parity
+        t0 = time.time()
+        vectors = embedder.encode_passages([c["text"] for c in chunks])
+        report["embed_s"] = round(time.time() - t0, 1)
+        vs = VectorStore()
+        build = vs.build(chunks, vectors)
+        report["vectors"] = build["rows"]
+        report["vector_index_type"] = build["index_type"]
 
-    # ---- bm25 --------------------------------------------------------------------
-    t0 = time.time()
-    bm = BM25Store().build(chunks)
-    report["bm25_docs"] = bm["docs"]
-    report["bm25_s"] = round(time.time() - t0, 1)
+        # ---- bm25 ----------------------------------------------------------------
+        t0 = time.time()
+        bm = BM25Store().build(chunks)
+        report["bm25_docs"] = bm["docs"]
+        report["bm25_s"] = round(time.time() - t0, 1)
 
     # ---- graph -------------------------------------------------------------------
     if skip_graph:
