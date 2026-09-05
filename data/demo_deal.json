@@ -1,0 +1,28 @@
+{
+  "id": "deal_demo_costco",
+  "target": "Costco",
+  "peers": [
+    "Coca-Cola",
+    "General Mills",
+    "Kraft Heinz"
+  ],
+  "thesis": "Screen Costco as a membership-model retail asset: how durable is the fee stream, how capital-intensive is the store base, and how does it compare with staples peers.",
+  "sector": "Consumer Staples",
+  "questions": [
+    {
+      "kind": "text_lookup",
+      "question": "What does Costco's FY2021 10-K say about how membership fee revenue is recognized, and what does it disclose about renewal rates?",
+      "expect": "an answer citing filing passages [E#]"
+    },
+    {
+      "kind": "financials_and_compute",
+      "question": "What was Costco's free cash flow in FY2021? Use the XBRL facts for operating cash flow and capital expenditure, and compute the difference.",
+      "expect": "an answer citing XBRL facts [F#] and a computed value [C#]"
+    },
+    {
+      "kind": "out_of_corpus",
+      "question": "What was Kroger's FY2021 gross margin?",
+      "expect": "an abstention -- Kroger is not in the indexed corpus"
+    }
+  ]
+}

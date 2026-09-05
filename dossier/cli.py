@@ -327,6 +327,30 @@ def demo(sequential: bool = typer.Option(False)) -> None:
     _emit("demo", rep)
 
 
+graph_app = typer.Typer(help="Graph backends.")
+app.add_typer(graph_app, name="graph")
+
+
+@graph_app.command("sync")
+def graph_sync(to: str = typer.Option("neo4j", "--to", help="Target backend: neo4j | networkx.")) -> None:
+    """Copy the built graph into another backend without re-running extraction."""
+    from .index.graph_store import sync_graph
+
+    rep = sync_graph(target_backend=to)
+    console.print(
+        f"[bold green]graph sync[/] {rep['source']['backend']} -> {rep['target']['backend']}: "
+        f"{rep['target']['entities']}e/{rep['target']['relations']}r in {rep['elapsed_s']}s"
+    )
+    _emit("graph_sync", rep)
+
+
+@graph_app.command("stats")
+def graph_stats(backend: str = typer.Option("networkx")) -> None:
+    from .index.graph_store import open_graph_store
+
+    console.print_json(json.dumps(open_graph_store(backend).stats()))
+
+
 @app.command()
 def health() -> None:
     """Index counts, graph backend, model tiers -- same payload as GET /health."""

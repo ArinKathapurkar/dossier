@@ -406,3 +406,35 @@ def open_graph_store(backend: str | None = None, allow_fallback: bool = True) ->
             attrs={"from": "neo4j", "to": "networkx", "error": type(exc).__name__},
         )
         return NetworkXGraphStore()
+
+
+def sync_graph(source: GraphStore | None = None, target_backend: str = "neo4j", batch: int = 500) -> dict:
+    """Copy a built graph into another backend.
+
+    Exists so the Neo4j path can be exercised against the real graph without paying for
+    extraction again: entity extraction is the expensive step, the store is not.
+    """
+    import time
+
+    source = source or NetworkXGraphStore()
+    if target_backend == "neo4j":
+        target = Neo4jGraphStore()
+    else:
+        target = NetworkXGraphStore()
+    started = time.time()
+    entities = [
+        Entity(name=d.get("name", n), type=d.get("type", ""), chunk_ids=sorted(d.get("chunk_ids", set())))
+        for n, d in source.g.nodes(data=True)
+    ]
+    relations = [
+        Relation(src=u, rel=d.get("rel", ""), dst=v, chunk_ids=sorted(d.get("chunk_ids", set())))
+        for u, v, d in source.g.edges(data=True)
+    ]
+    for i in range(0, len(entities), batch):
+        target.upsert(entities[i : i + batch], [])
+    for i in range(0, len(relations), batch):
+        target.upsert([], relations[i : i + batch])
+    stats = target.stats()
+    if hasattr(target, "close"):
+        target.close()
+    return {"source": source.stats(), "target": stats, "elapsed_s": round(time.time() - started, 2)}
