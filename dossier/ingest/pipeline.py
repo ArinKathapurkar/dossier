@@ -68,7 +68,7 @@ def run_ingest(limit_docs: int | None = None, skip_xbrl: bool = False) -> dict[s
     for r in page_rows:
         pages_by_doc.setdefault(r["doc_name"], {})[r["page_num"]] = r["text"]
     q_dicts = [q.__dict__ for q in questions]
-    report["page_convention"] = fb.verify_page_convention(q_dicts, pages_by_doc, n=3)
+    report["page_convention"] = fb.verify_page_convention(q_dicts, pages_by_doc)
 
     # ---- chunks -----------------------------------------------------------------
     tok, tok_kind = _embedding_tokenizer()

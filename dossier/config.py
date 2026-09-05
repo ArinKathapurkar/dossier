@@ -127,6 +127,10 @@ class Config:
     chunk_tokens: int = 350
     chunk_overlap: int = 50
     rrf_k: int = 60
+    # Measured, not assumed: FinanceBench's `evidence_page_num` is 0-indexed, so gold page
+    # P corresponds to our 1-indexed page P + 1. See ingest/financebench.verify_page_convention
+    # and runs/reports/ingest.json ("page_convention").
+    gold_page_offset: int = 1
     retrieve_k: int = 50
     rerank_top_n: int = 8
     graph_hops: int = 1
