@@ -248,17 +248,37 @@ for two or three extra turns.
 
 ### Memo run
 
-The five-section memo path is implemented (`agent/subagents.py`), unit-tested for the
-ledger-merge and id-remapping logic that makes it correct, and exercised by the
-`hitl_enqueue` / `hitl_resume_*` cassettes, which run the `memo_section` path with a real
-section prompt through escalation and resume.
+The five-section assembly runs end to end in the offline suite
+(`tests/unit/test_memo_assembly.py`): five sub-agents concurrently, five independent
+ledgers merged into one, every section's citations rewritten through its own remap, the
+synthesizer, the memo-level output guard, the state machine and the persistence. The model
+is scripted and the retriever is a fixture; everything between them is the real code path.
 
-**A full five-section memo has not been run end to end.** The Anthropic credit balance for
-this account was exhausted during the build — after the entity graph ($5.03), the 50-question
-Tier 3 run ($6.68), the 15 out-of-corpus probes ($0.18) and 22 cassette recordings ($0.97).
-The parallel-versus-`--sequential` wall-time comparison and total memo cost are therefore
-**not measured, and are not stated**. `dossier memo <deal_id>` and `dossier demo` will produce
-them on an account with credit; both write their numbers to `runs/reports/`.
+The fixture is built so a remap bug cannot pass by luck. Each section retrieves one passage
+unique to it and one shared by all five, and the order flips between sections — so `E1`
+means the shared passage in Business Overview and the unique passage in Financial Profile.
+Every citation in the assembled memo is then asserted to resolve to the passage its own
+section actually cited. Both plausible failures were checked by mutating the source: a
+no-op `remap_ids`, and an `evidence_ids` list left un-remapped alongside remapped prose.
+Each is caught by a different assertion.
+
+**Running it found a real bug.** `memo` re-bound the tracer to the parent run after the
+sub-agents returned — inside the `run` span wrapping the whole memo. The tracer's parent
+stack is thread-local, so that reset *this* thread's stack to empty while the span was
+open, and the memo died on the way out with `IndexError: pop from empty list`. Nothing
+caught it because the cassettes exercise one `memo_section` at a time, where no such
+re-bind happens; the bug lived only in the assembly that had never run. The redundant
+re-bind is gone, and the tracer now unwinds by span identity so observability can never
+fail the work it observes (`tests/unit/test_tracer_scoping.py`).
+
+**What is still not measured:** a memo written by the live model. The Anthropic credit
+balance for this account was exhausted during the build — after the entity graph ($5.03),
+the 50-question Tier 3 run ($6.68), the 15 out-of-corpus probes ($0.18) and 22 cassette
+recordings ($0.97). So memo quality, total memo cost, and the
+parallel-versus-`--sequential` wall time are **not stated**. A scripted model returns
+instantly, so timing the test above would measure nothing and no number is quoted from it.
+`dossier memo <deal_id>` and `dossier demo` produce those on an account with credit, and
+write them to `runs/reports/`.
 
 Measured from the recorded runs that did complete:
 
@@ -273,12 +293,12 @@ Measured from the recorded runs that did complete:
 
 | | files | code | comments |
 |---|---|---|---|
-| package | 45 | **5,375** | 1,018 |
-| tests | 14 | **604** | 49 |
+| package | 45 | **5,464** | 1,085 |
+| tests | 19 | **975** | 165 |
 
 | | |
 |---|---|
-| unit tests | **88**, all offline |
+| unit tests | **131**, all offline |
 | regression cassettes | **22**, replayed offline in CI ($0.97 to record) |
 | Tier 1 CI floor | nDCG@10 ≥ 0.08 on `rrf(all three)+rerank`, ≥ 0.12 on `vector` |
 
@@ -379,9 +399,11 @@ dossier serve &  curl -s localhost:8000/health
   the container serves `/health` with the full index, and reports the graph from Neo4j when
   `DOSSIER_GRAPH_BACKEND=neo4j`. The Neo4j-to-NetworkX fallback is covered by a unit test and
   a recorded cassette.
-- **The API credit balance ran out** before `dossier demo` and a full five-section memo run
-  could complete. Those numbers are stated as unmeasured rather than estimated — see the
-  Memo run section above and [`docs/EVAL.md` §6](docs/EVAL.md).
+- **The API credit balance ran out** before `dossier demo` and a live memo run could
+  complete. The five-section assembly is covered end to end offline instead, and the
+  figures a scripted model cannot produce — memo quality, cost, parallel wall time — are
+  stated as unmeasured rather than estimated. See the Memo run section above and
+  [`docs/EVAL.md` §6](docs/EVAL.md).
 - **Model tiers.** Primary `claude-sonnet-5`, fallback and extraction tier
   `claude-haiku-4-5`, judge `claude-sonnet-5`. All ids are config values, verified to resolve
   against `/v1/models` at preflight.

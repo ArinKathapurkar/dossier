@@ -377,13 +377,23 @@ account was exhausted after the entity graph ($5.03), the 50-question Tier 3 run
 15 out-of-corpus probes ($0.18) and 22 cassette recordings ($0.97) -- roughly $13 of API
 spend.
 
-- **A full five-section memo run**, and therefore the parallel-versus-`--sequential` wall
-  time, total memo cost and token counts. The path is implemented, its ledger-merge and
-  id-remapping logic is unit-tested, and the `memo_section` run type with a real section
-  prompt is exercised end to end by the `hitl_enqueue` / `hitl_resume_*` cassettes -- but the
-  five-section assembly has not run. `dossier memo <deal_id>` writes those numbers to
-  `runs/reports/`.
+- **A memo written by the live model**, and therefore memo quality, total memo cost, token
+  counts and the parallel-versus-`--sequential` wall time. The five-section *assembly* does
+  now run end to end offline against a scripted model
+  (`tests/unit/test_memo_assembly.py`) -- concurrent sub-agents, ledger merge, citation
+  remap, synthesizer, memo-level guard, state machine and persistence, with both remap
+  failure modes confirmed by source mutation. What a scripted model cannot tell you is
+  whether the prose is any good or what it costs, and it returns instantly, so timing it
+  would measure nothing about concurrency. No number is quoted from it.
+  `dossier memo <deal_id>` writes the live figures to `runs/reports/`.
 - **A Tier 3 prompt comparison.** See §5.
+
+Running the assembly for the first time found a crash in it -- `memo` re-bound the tracer
+inside its own open `run` span, emptying the thread-local parent stack and raising
+`IndexError` on exit. It was invisible to the cassettes, which run one `memo_section` at a
+time. Fixed in `subagents.memo` and hardened in the tracer; pinned by
+`tests/unit/test_tracer_scoping.py`. The lesson is the ordinary one: a path with no test is
+a path that does not work, however carefully it was written.
 
 Both are stated rather than estimated. Numbers this repository does not have are not in it.
 
