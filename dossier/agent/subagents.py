@@ -138,7 +138,11 @@ async def memo(deal: Any, sequential: bool = False) -> dict:
         tokens_out = sum(s["tokens_out"] for s in sections)
 
         # ---- synthesize -----------------------------------------------------------
-        tracer.bind(parent.run_id)
+        # No re-bind here. The sub-agents ran on worker threads via `asyncio.to_thread`,
+        # and the tracer's run binding and parent stack are both thread-local, so this
+        # thread is still bound to the parent run and still inside the `run` span opened
+        # above. Re-binding would reset *this* thread's stack to empty while that span is
+        # open, and the memo would fail on the way out of it.
         system, version = registry().get("synthesizer")
         body = "\n\n".join(f"## {d['section']}\n\n{d['markdown']}" for d in drafts)
         evidence_index = merged.render_index()

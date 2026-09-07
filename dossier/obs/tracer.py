@@ -171,7 +171,15 @@ class Tracer:
             s.attrs["error"] = f"{type(exc).__name__}: {exc}"
             raise
         finally:
-            self._stack.pop()
+            # Unwind to this span's own id rather than popping blindly. A `bind()` issued
+            # while this span was open resets the thread's stack underneath us -- a caller
+            # bug, but one that used to take the traced work down with `IndexError: pop
+            # from empty list` rather than merely distorting the trace. Popping by identity
+            # keeps the span recorded and the stack coherent, so a mis-scoped bind degrades
+            # the trace shape instead of failing the run it was supposed to observe.
+            stack = self._stack
+            if s.span_id in stack:
+                del stack[stack.index(s.span_id) :]
             s.end_ts = time.time()
             s.attrs.setdefault("duration_ms", round((s.end_ts - s.start_ts) * 1000, 2))
             self._write(s)
